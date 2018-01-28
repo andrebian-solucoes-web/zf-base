@@ -2,7 +2,7 @@
 
 namespace User\Controller;
 
-use Application\Controller\BaseController;
+use BaseApplication\Controller\BaseController;
 use User\Assets\SessionNamespace;
 use User\Auth\Adapter;
 use User\Form\Login;
@@ -20,6 +20,8 @@ class AuthController extends BaseController
 {
     /**
      * @return \Zend\Http\Response|ViewModel
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function indexAction()
     {

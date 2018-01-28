@@ -22,6 +22,12 @@ class UserService
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @param $id
+     * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function delete($id)
     {
         $user = $this->entityManager->getReference(User::class, $id);
@@ -32,6 +38,12 @@ class UserService
         return true;
     }
 
+    /**
+     * @param $userId
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     */
     public function updateLastLogin($userId)
     {
         /** @var User $user */

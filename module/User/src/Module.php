@@ -82,7 +82,7 @@ class Module implements DependencyIndicatorInterface
                 'password-recovery-error'
             ];
 
-            if ( ! $auth->hasIdentity() && ! in_array($matchedRoute, $whitelist)) {
+            if (!$auth->hasIdentity() && !in_array($matchedRoute, $whitelist)) {
                 return $controller->redirect()->toRoute('login');
             }
 

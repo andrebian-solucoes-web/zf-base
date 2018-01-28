@@ -1,14 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andrebian
- * Date: 9/8/17
- * Time: 10:38 PM
- */
 
 namespace User\Service;
 
-use Application\Mail\Mail;
+use BaseApplication\Mail\Mail;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use User\Entity\PasswordRecoveryToken;
@@ -40,6 +34,8 @@ class PasswordRecoveryService
     /**
      * @param $email
      * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function startRecoverPassword($email)
     {
@@ -86,6 +82,7 @@ class PasswordRecoveryService
 
     /**
      * @param User $user
+     * @throws \Doctrine\ORM\ORMException
      */
     private function deactivatePreviousTokens(User $user)
     {

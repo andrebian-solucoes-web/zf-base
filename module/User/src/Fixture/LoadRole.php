@@ -22,22 +22,6 @@ class LoadRole implements FixtureInterface, OrderedFixtureInterface
             'name' => 'Administrador'
         ]));
 
-        $manager->persist(new Role([
-            'name' => 'Financeiro'
-        ]));
-
-        $manager->persist(new Role([
-            'name' => 'Marketing'
-        ]));
-
-        $manager->persist(new Role([
-            'name' => 'Comercial'
-        ]));
-
-        $manager->persist(new Role([
-            'name' => 'Motorista'
-        ]));
-
         $manager->flush();
     }
 

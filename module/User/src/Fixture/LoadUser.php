@@ -25,9 +25,9 @@ class LoadUser implements FixtureInterface, OrderedFixtureInterface
             ]);
 
         $user = new User([
-            'name' => 'Andre Cardoso',
-            'username' => 'andrecardosodev@gmail.com',
-            'password' => 'andrebian',
+            'name' => 'Admin',
+            'username' => 'admin@site.com',
+            'password' => 'admin123',
             'role' => $admin
         ]);
 

@@ -1,14 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andrebian
- * Date: 9/8/17
- * Time: 10:29 PM
- */
 
 namespace User\Controller;
 
-use Application\Controller\BaseController;
+use BaseApplication\Controller\BaseController;
 use DateTime;
 use Doctrine\ORM\EntityManager;
 use User\Entity\PasswordRecoveryToken;
@@ -22,6 +16,11 @@ use Zend\View\Model\ViewModel;
  */
 class PasswordRecoveryController extends BaseController
 {
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     public function indexAction()
     {
         /** @var Request $request */
@@ -43,6 +42,11 @@ class PasswordRecoveryController extends BaseController
         return new ViewModel();
     }
 
+    /**
+     * @return \Zend\Http\Response|ViewModel
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
     public function recoverPasswordAction()
     {
         $email = $this->params()->fromQuery('email');
@@ -50,7 +54,7 @@ class PasswordRecoveryController extends BaseController
 
         $entityManager = $this->getServiceLocator()->get(EntityManager::class);
         /** @var PasswordRecoveryToken $passwordRecoveryToken */
-        if ( ! $passwordRecoveryToken = $entityManager->getRepository(PasswordRecoveryToken::class)->findOneBy([
+        if (!$passwordRecoveryToken = $entityManager->getRepository(PasswordRecoveryToken::class)->findOneBy([
             'active' => true,
             'token' => $token
         ])) {

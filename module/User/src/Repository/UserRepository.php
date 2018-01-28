@@ -2,7 +2,7 @@
 
 namespace User\Repository;
 
-use Application\Repository\AbstractApplicationRepository;
+use BaseApplication\Repository\AbstractApplicationRepository;
 
 /**
  * Class UserRepository

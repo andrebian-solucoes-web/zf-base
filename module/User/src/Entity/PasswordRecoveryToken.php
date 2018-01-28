@@ -1,14 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andrebian
- * Date: 9/8/17
- * Time: 10:58 PM
- */
 
 namespace User\Entity;
 
-use Application\Entity\AbstractApplicationEntity;
+use BaseApplication\Entity\AbstractApplicationEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -25,7 +19,6 @@ class PasswordRecoveryToken extends AbstractApplicationEntity
      * @ORM\Column(name="token", type="string", length=255, nullable=false)
      */
     private $token;
-
 
     /**
      * @var User

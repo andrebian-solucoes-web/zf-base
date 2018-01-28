@@ -4,7 +4,7 @@ namespace User\Auth;
 
 use Doctrine\ORM\EntityManager;
 use User\Entity\User;
-use User\Entity\UserRepository;
+use User\Repository\UserRepository;
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result;
 
