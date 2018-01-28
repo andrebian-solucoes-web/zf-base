@@ -55,12 +55,19 @@
     "scripts": {
         "cs-check": "phpcs",
         "cs-fix": "phpcbf",
-        "development-disable": "zf-development-mode disable",
-        "development-enable": "zf-development-mode enable",
+        "development-disable": [
+            "zf-development-mode disable",
+            "rm -f config/autoload/zenddevelopertools.local.php",
+            "rm -f scripts/bake.php"
+        ],
+        "development-enable": [
+            "zf-development-mode enable",
+            "cp config/autoload/zenddevelopertools.local.php.dist config/autoload/zenddevelopertools.local.php",
+            "cp scripts/bake.php.dist scripts/bake.php"
+        ],
         "development-status": "zf-development-mode status",
         "post-create-project-cmd": [
-            "@development-enable",
-            "cp config/autoload/zenddevelopertools.local.php-dist config/autoload/zenddevelopertools.local.php"
+            "@development-enable"
         ],
         "serve": "php -S 0.0.0.0:8080 -t public",
         "test": "phpunit",

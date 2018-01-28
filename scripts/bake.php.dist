@@ -1,0 +1,1111 @@
+<?php
+
+require __DIR__ . '/../vendor/autoload.php';
+
+if (strpos($argv[1], '.json') !== false) {
+    $file = $argv[1];
+    parseFile($file);
+} else {
+    if (is_dir($argv[1])) {
+        if ($result = glob($argv[1] . '/*.json')) {
+            foreach ($result as $file) {
+                $file = __DIR__ . '/../' . $file;
+                parseFile($file);
+            }
+
+        }
+    } else {
+        echo PHP_EOL . 'Somente arquivos .json são permitidos' . PHP_EOL;
+    }
+}
+
+/**
+ * @param $file
+ */
+function parseFile($file)
+{
+    $input = file_get_contents($file);
+    $input = json_decode($input, true);
+
+    $fullyQualifiedNamespace = key($input);
+    $namespace = explode('\\', $fullyQualifiedNamespace);
+    $resultClass = end($namespace);
+    $namespace = $namespace[0];
+
+    echo PHP_EOL . $resultClass . PHP_EOL;
+
+    mountEntity($input[$fullyQualifiedNamespace], $namespace, $resultClass);
+    mountForm($input[$fullyQualifiedNamespace], $namespace, $resultClass);
+    mountFormFilter($input[$fullyQualifiedNamespace], $namespace, $resultClass);
+    mountService($namespace, $resultClass);
+    mountController($namespace, $resultClass);
+    mountViews($input[$fullyQualifiedNamespace], $namespace, $resultClass);
+}
+
+/**
+ * @param $data
+ * @param $namespace
+ * @param $className
+ */
+function mountEntity($data, $namespace, $className)
+{
+    $baseClassName = $className;
+    $path = __DIR__ . '/../modules/' . $namespace . '/src/Entity';
+    if (!is_dir($path)) {
+        mkdir($path, 0777, true);
+    }
+    $destination = $path . '/' . $className . '.php';
+
+    $header = <<<EOL
+<?php 
+
+namespace $namespace\Entity;
+
+
+EOL;
+
+    $uses = <<<EOL
+use Application\Entity\AbstractApplicationEntity;
+use Doctrine\ORM\Mapping as ORM;
+
+EOL;
+
+    $tableName = strtolower($namespace) . '_' . strtolower($className) . 's';
+
+    $className = <<<EOL
+
+/**
+ * Class $className
+ * @package $namespace\Entity
+ *
+ * @ORM\Table(name="$tableName")
+ * @ORM\Entity
+ */
+class $className extends AbstractApplicationEntity
+{
+
+EOL;
+
+
+    $fields = '';
+    $gettersAndSetters = '';
+
+    $endOfFile = <<<EOL
+}
+
+EOL;
+
+
+    foreach ($data as $field => $definitions) {
+        $getterSetterName = ucfirst($field);
+        $inside = '$this->' . $field;
+        $fluent = '$this';
+
+        switch ($definitions['type']) {
+            case 'relation':
+                $uses .= <<<EOL
+use {$definitions['relationEntity']};
+
+EOL;
+
+                $relationType = $definitions['relationType'];
+                $targetEntity = $definitions['relationEntity'];
+                $targetName = explode('\\', $targetEntity);
+                $targetName = end($targetName);
+                $mappedOrInversed = '';
+
+                $joinColumn = '';
+                if ($relationType == 'ManyToOne') {
+                    $joinColumn = '@ORM\JoinColumn(name="' . $field . '_id", referencedColumnName="id")';
+                }
+
+                if ($relationType == 'OneToMany') {
+                    $mappedOrInversed = ', mappedBy="cliente"';
+                }
+
+                $fields .= <<<EOL
+
+    /**
+     * @var $targetName
+     *
+     * @ORM\\{$relationType}(targetEntity="$targetEntity"$mappedOrInversed)
+     * $joinColumn
+     */
+    private $$field;
+    
+EOL;
+
+                $gettersAndSetters .= <<<EOL
+
+    /**
+     * @return $targetName
+     */
+    public function get$getterSetterName()
+    {
+        return $inside;
+    }
+    
+    /**
+     * @param $$field $targetName
+     * @return $baseClassName
+     */
+    public function set$getterSetterName($targetName $$field)
+    {
+        $inside = $$field;
+        return $fluent;
+    }
+
+EOL;
+                break;
+
+            case 'select':
+
+                $required = $definitions['required'] == false ? 'true' : 'false';
+                $type = $definitions['dataType'];
+                $fieldDefinition = 'type="' . $type . '"';
+                $fieldDefinition .= ', nullable=' . $required;
+
+                $fields .= <<<EOL
+    /**
+     * @var $type
+     * @ORM\Column($fieldDefinition)
+     */
+    private $$field;
+
+
+EOL;
+
+                $gettersAndSetters .= <<<EOL
+
+    /**
+     * @return $type
+     */
+    public function get$getterSetterName()
+    {
+        return $inside;
+    }
+   
+    /**
+     * @return $baseClassName
+     */
+    public function set$getterSetterName($$field)
+    {
+        $inside = $$field;
+        return $fluent;
+    }
+
+EOL;
+
+                break;
+            default:
+
+                $required = $definitions['required'] == false ? 'true' : 'false';
+                $length = 255;
+                $type = $definitions['type'];
+                if ($type == 'textarea') {
+                    $type = 'text';
+                    $length = 65535;
+                }
+                $fieldDefinition = 'type="' . $type . '"';
+                if ($definitions['type'] == 'string' || $type == 'text') {
+                    $fieldDefinition .= ', length=' . $length;
+                }
+                $fieldDefinition .= ', nullable=' . $required;
+
+                $fields .= <<<EOL
+    /**
+     * @var string
+     * @ORM\Column($fieldDefinition)
+     */
+    private $$field;
+
+
+EOL;
+
+                $gettersAndSetters .= <<<EOL
+
+    /**
+     * @return $type
+     */
+    public function get$getterSetterName()
+    {
+        return $inside;
+    }
+   
+    /**
+     * @return $baseClassName
+     */
+    public function set$getterSetterName($$field)
+    {
+        $inside = $$field;
+        return $fluent;
+    }
+
+EOL;
+
+                break;
+        }
+    }
+
+    $gettersAndSetters .= <<<EOL
+
+    public function __toString()
+    {
+        return '';
+    }
+
+EOL;
+
+
+    $fileContent = $header . $uses . $className . $fields . $gettersAndSetters . $endOfFile;
+
+
+    file_put_contents($destination, $fileContent);
+    echo PHP_EOL . '[X] Gerada entidade' . PHP_EOL;
+}
+
+/**
+ * @param $data
+ * @param $namespace
+ * @param $className
+ */
+function mountForm($data, $namespace, $className)
+{
+    $className .= 'Form';
+    $baseClassName = $className;
+    $path = __DIR__ . '/../modules/' . $namespace . '/src/Form';
+    if (!is_dir($path)) {
+        mkdir($path, 0777, true);
+    }
+    $destination = $path . '/' . $className . '.php';
+
+    $header = <<<EOL
+<?php 
+
+namespace $namespace\Form;
+
+
+EOL;
+
+    $uses = <<<EOL
+use Zend\Form\Form;
+use Application\Assets\Form\FormSaveButton;
+use Zend\Form\Element\Text;
+use Zend\Form\Element\Hidden;
+use Zend\Form\Csrf;
+
+EOL;
+
+    $className = <<<EOL
+
+/**
+ * Class $className
+ * @package $namespace\Form
+ */
+class $className extends Form
+{
+
+EOL;
+
+    $endOfFile = <<<EOL
+}
+
+EOL;
+
+
+    $methodStart = <<<EOL
+    public function __construct(\$name = 'name')
+    {
+        parent::__construct(\$name);
+
+        \$this->setAttribute('role', 'form');
+
+        \$inputFilter = new {$baseClassName}Filter();
+        \$this->setInputFilter(\$inputFilter->getInputFilter());
+
+
+EOL;
+    $methodEnd = <<<EOL
+        \$this->add(FormSaveButton::getSaveButton());
+    }
+
+EOL;
+
+
+    $fields = <<<EOL
+        \$this->add([
+            'name' => 'id',
+            'type' => Hidden::class
+        ]);
+
+
+EOL;
+
+    $alreadyUsedSelect = false;
+    $alreadyUsedTextarea = false;
+
+    foreach ($data as $fieldName => $fieldDefinitions) {
+        $type = 'Text::class';
+        if ($fieldDefinitions['type'] == 'textarea') {
+            if (!$alreadyUsedTextarea) {
+                $uses .= <<<EOL
+use Zend\Form\Element\Textarea;
+
+EOL;
+                $alreadyUsedTextarea = true;
+            }
+            $type = 'Textarea::class';
+        }
+
+        $class = isset($fieldDefinitions['class']) ? $fieldDefinitions['class'] : '';
+
+        switch ($fieldDefinitions['type']) {
+            case 'select':
+
+                if (!$alreadyUsedSelect) {
+                    $uses .= <<<EOL
+use Zend\Form\Element\Select;
+
+EOL;
+
+                }
+
+                $valueOptions = '[' . PHP_EOL;
+
+                if (isset($fieldDefinitions['options']) && !empty($fieldDefinitions['options'])) {
+                    foreach ($fieldDefinitions['options'] as $key => $option) {
+                        if (is_string($key)) {
+                            $key = '\'' . $key . '\'';
+                        }
+                        $valueOptions .= <<<EOL
+                    $key => '$option ',
+
+EOL;
+                    }
+                    $valueOptions .= <<<EOL
+                ]
+EOL;
+                }
+
+                if (isset($fieldDefinitions['dataProvider']) && !empty($fieldDefinitions['dataProvider'])) {
+                    $call = explode('::', $fieldDefinitions['dataProvider']);
+                    $class = $call[0];
+                    $method = $call[1];
+
+                    $selectData = $class::$method();
+
+                    foreach ($selectData as $key => $value) {
+                        $valueOptions .= <<<EOL
+                    '$key' => '$value',
+
+EOL;
+
+                    }
+
+                    $valueOptions .= <<<EOL
+                ]
+EOL;
+                }
+
+                $fields .= <<<EOL
+        \$this->add([
+            'name' => '$fieldName',
+            'type' => Select::class,
+            'options' => [
+                'label' => '{$fieldDefinitions['label']}',
+                'value_options' => {$valueOptions},
+                'empty_option' => 'Select an option',
+                'disable_inarray_validator' => true
+            ],
+            'attributes' => [
+                'class' => 'form-control $class',
+                'id' => '$fieldName'
+            ]
+        ]);
+
+
+EOL;
+                $alreadyUsedSelect = true;
+                break;
+            default:
+                $fields .= <<<EOL
+        \$this->add([
+            'name' => '$fieldName',
+            'type' => $type,
+            'options' => [
+                'label' => '{$fieldDefinitions['label']}'
+            ],
+            'attributes' => [
+                'class' => 'form-control $class',
+                'id' => '$fieldName'
+            ]
+        ]);
+
+EOL;
+                break;
+        }
+    }
+
+    $fields .= <<<EOL
+
+        \$this->add([
+            'name' => 'csrf',
+            'type' => Csrf::class
+        ]);
+
+
+EOL;
+
+    $fileContent = $header . $uses . $className . $methodStart . $fields . $methodEnd . $endOfFile;
+
+    file_put_contents($destination, $fileContent);
+    echo '[X] Gerado form' . PHP_EOL;
+}
+
+/**
+ * @param $data
+ * @param $namespace
+ * @param $className
+ */
+function mountFormFilter($data, $namespace, $className)
+{
+    $className .= 'FormFilter';
+    $path = __DIR__ . '/../modules/' . $namespace . '/src/Form';
+    if (!is_dir($path)) {
+        mkdir($path, 0777, true);
+    }
+    $destination = $path . '/' . $className . '.php';
+
+    $header = <<<EOL
+<?php 
+
+namespace $namespace\Form;
+
+
+EOL;
+
+    $uses = <<<EOL
+use Zend\InputFilter\InputFilter;
+use Zend\InputFilter\InputFilterAwareInterface;
+use Zend\InputFilter\InputFilterInterface;
+use Zend\Filter\StringTrim;
+use Zend\Filter\StripTags;
+use Zend\Validator\StringLength;
+
+EOL;
+
+    $className = <<<EOL
+
+/**
+ * Class $className
+ * @package $namespace\Form
+ */
+class $className implements InputFilterAwareInterface
+{
+    protected \$inputFilter;
+
+    // Add content to these methods:
+    public function setInputFilter(InputFilterInterface \$inputFilter)
+    {
+        throw new \Exception("Not used");
+    }
+
+EOL;
+
+    $endOfFile = <<<EOL
+}
+
+EOL;
+
+
+    $methodStart = <<<EOL
+    
+    public function getInputFilter()
+    {
+        if (!\$this->inputFilter) {
+            \$inputFilter = new InputFilter();
+
+
+EOL;
+    $methodEnd = <<<EOL
+        }
+
+        return \$this->inputFilter;
+    }
+
+EOL;
+
+
+    $fields = <<<EOL
+            \$inputFilter->add([
+                'name' => 'id',
+                'required' => false,
+            ]);
+
+
+EOL;
+
+    foreach ($data as $fieldName => $fieldDefinitions) {
+        $required = $fieldDefinitions['required'] == true ? 'true' : 'false';
+
+        $fields .= <<<EOL
+            \$inputFilter->add([
+                'name' => '$fieldName',
+                'required' => $required,
+                'filters' => [
+                    ['name' => StripTags::class],
+                    ['name' => StringTrim::class],
+                ],
+                'validators' => [
+                    [
+                        'name' => StringLength::class,
+                        'options' => [
+                            'encoding' => 'UTF-8',
+                            'min' => 1,
+                            'max' => 255,
+                        ],
+                    ],
+                ],
+            ]);
+
+
+EOL;
+
+    }
+
+    $fields .= <<<EOL
+            \$this->inputFilter = \$inputFilter;
+
+EOL;
+
+
+
+    $fileContent = $header . $uses . $className . $methodStart . $fields . $methodEnd . $endOfFile;
+
+    file_put_contents($destination, $fileContent);
+    echo '[X] Gerado form filter' . PHP_EOL;
+}
+
+/**
+ * @param $namespace
+ * @param $className
+ */
+function mountService($namespace, $className)
+{
+    $className .= 'Service';
+    $path = __DIR__ . '/../modules/' . $namespace . '/src/Service';
+    if (!is_dir($path)) {
+        mkdir($path, 0777, true);
+    }
+    $destination = $path . '/' . $className . '.php';
+
+    $serviceContent = <<<EOL
+<?php 
+
+namespace $namespace\Service;
+
+use Application\Service\BaseService;
+
+/**
+ * Class $className
+ * @package $namespace\Service
+ */
+class $className extends BaseService
+{
+    public function save(array \$data)
+    {
+        //TODO implement here
+    }
+
+}
+
+EOL;
+
+    file_put_contents($destination, $serviceContent);
+    echo '[X] Gerado service' . PHP_EOL;
+
+}
+
+/**
+ * @param $namespace
+ * @param $className
+ */
+function mountController($namespace, $className)
+{
+    $baseClass = $className;
+    $className .= 'Controller';
+    $path = __DIR__ . '/../modules/' . $namespace . '/src/Controller';
+    if (!is_dir($path)) {
+        mkdir($path, 0777, true);
+    }
+    $destination = $path . '/' . $className . '.php';
+
+    $route = getRoute($baseClass);
+
+    $serviceContent = <<<EOL
+<?php 
+
+namespace $namespace\Controller;
+
+use Application\Controller\CrudController;
+use $namespace\\Entity\\$baseClass;
+use $namespace\\Form\\{$baseClass}Form;
+use $namespace\\Service\\{$baseClass}Service;
+
+/**
+ * Class $className
+ * @package $namespace\Controller
+ */
+class $className extends CrudController
+{
+    public function __construct()
+    {
+        \$this->repository = $baseClass::class;
+        \$this->service = {$baseClass}Service::class;
+        \$this->form = {$baseClass}Form::class;
+        \$this->redirectTo = '$route';
+        \$this->redirectMethod = 'toRoute';
+    }
+}
+
+EOL;
+
+    file_put_contents($destination, $serviceContent);
+    echo '[X] Gerado controller' . PHP_EOL;
+
+}
+
+/**
+ * @param $data
+ * @param $namespace
+ * @param $className
+ */
+function mountViews($data, $namespace, $className)
+{
+    $namespaceRoute = getRoute($namespace);
+    $basePath = __DIR__ . '/../modules/'.$namespace.'/view/' . $namespaceRoute;
+    $endPath = getRoute($className);
+
+    $destinationPath = $basePath . '/' . $endPath;
+    if (!is_dir($destinationPath)) {
+        mkdir($destinationPath, 0777, true);
+    }
+
+    $formDestination = $destinationPath . '/form.twig';
+    $indexDestination = $destinationPath . '/index.twig';
+    $inactiveDestination = $destinationPath . '/show-inactive.twig';
+    $listDestination = $destinationPath . '/list.twig';
+    $addDestination = $destinationPath . '/add.twig';
+    $editDestination = $destinationPath . '/edit.twig';
+    $viewContentDestination = $destinationPath . '/view.twig';
+
+    $scriptDestination = __DIR__ . '/../public/js/modules/' . $namespaceRoute;
+    if (!is_dir($scriptDestination)) {
+        mkdir($scriptDestination, 0755, true);
+    }
+    $scriptDestination .= '/' . $endPath . '.js';
+
+    $formContent = <<<EOL
+<form action="" method="post" enctype="application/x-www-form-urlencoded">
+    {{ formElement(form.get('id')) }}
+    {{ formElement(form.get('csrf')) }}
+
+EOL;
+
+    foreach ($data as $formItem => $definitions) {
+        $formContent .= <<<EOL
+    <div class="form-group">
+        {{ formLabel(form.get('$formItem')) }}
+        {{ formElement(form.get('$formItem')) }}
+
+EOL;
+        if (isset($definitions['hint']) && !empty($definitions['hint'])) {
+            $hint = $definitions['hint'];
+            $formContent .= <<<EOL
+        <small>{{ translate('$hint') }}</small>
+
+EOL;
+        }
+
+        $formContent .= <<<EOL
+        {% if errorMessages.$formItem != null %}
+            <div class="error">
+                {% for message in errorMessages.$formItem %}
+                    {{ translate(message) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+EOL;
+
+    }
+
+    $formContent .= <<<EOL
+    
+    <br clear="all"/>
+    <div class="form-group col-lg-2">
+        {{ formSubmit(form.get('submit')) }}
+    </div>
+</form>
+EOL;
+
+    file_put_contents($formDestination, $formContent);
+    echo '[X] Gerado view form' . PHP_EOL;
+
+    $addContent = <<<EOL
+{% extends "layout/layout.twig" %}
+
+{% block page_title %} - Adicionando $className{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Adicionando $className</h1>
+        </div>
+    </div>
+
+    <div class="row">
+    <div class="col-lg-12">
+
+        <ul class="breadcrumb">
+            <li>
+                <a href="{{ url('home') }}">Dashboard</a>
+            </li>
+            <li>
+                <a href="{{ url('$endPath') }}">
+                    $namespace &rarr; $className
+                </a>
+            </li>
+            <li>Adicionar nova</li>
+        </ul>
+
+        {% include 'partials/flash-messages.twig' %}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Adicionando $className
+            </div>
+            <div class="panel-body">
+                {% include '$namespaceRoute/$endPath/form.twig' %}
+            </div>
+        </div>
+    </div>
+    <br clear="all"/><br/><br/><br/><br/><br/><br/>
+{% endblock %}
+{%block footer %}
+    <script src="/js/modules/$namespaceRoute/$endPath.js"></script>
+{% endblock %}
+EOL;
+
+    file_put_contents($addDestination, $addContent);
+    echo '[X] Gerado view add' . PHP_EOL;
+
+    $editContent = <<<EOL
+{% extends "layout/layout.twig" %}
+
+{% block page_title %} - Editando $className{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Editando $className</h1>
+        </div>
+    </div>
+
+    <div class="row">
+    <div class="col-lg-12">
+
+        <ul class="breadcrumb">
+            <li>
+                <a href="{{ url('home') }}">Dashboard</a>
+            </li>
+            <li>
+                <a href="{{ url('$endPath') }}">
+                    $namespace &rarr; $className
+                </a>
+            </li>
+            <li>Editando</li>
+        </ul>
+
+        {% include 'partials/flash-messages.twig' %}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Editando $className
+            </div>
+            <div class="panel-body">
+                {% include '$namespaceRoute/$endPath/form.twig' %}
+            </div>
+        </div>
+    </div>
+    <br clear="all"/><br/><br/><br/><br/><br/><br/>
+{% endblock %}
+{%block footer %}
+    <script src="/js/modules/$namespaceRoute/$endPath.js"></script>
+{% endblock %}
+EOL;
+
+    file_put_contents($editDestination, $editContent);
+    echo '[X] Gerado view edit' . PHP_EOL;
+
+
+    $indexContent = <<<EOL
+{% extends "layout/layout.twig" %}
+
+{% block page_title %} - Tabela $className{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Tabela $className</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <ul class="breadcrumb">
+                <li>
+                    <a href="{{ url('home') }}">Dashboard</a>
+                </li>
+                <li>$namespace &rarr; $className
+                </li>
+            </ul>
+            {% include 'partials/flash-messages.twig' %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="{{ url('$endPath', {'action': 'add'}) }}"
+                       class="btn btn-primary icon icon-left">
+                        <i class="fa fa-plus"></i>
+                        {{ translate('Add new') }}
+                    </a>&nbsp;
+                    <a href="{{ url('$endPath', {'action': 'showInactive'}) }}"
+                       class="btn btn-default">{{ translate('View inactives') }}</a>
+                    &nbsp;
+                    <a href="#"
+                       class="btn btn-warning btn-pesquisa">Pesquisar</a>
+
+                    <div class="pesquisa-form">
+                        <br/>
+                        <form action="{{ url('search') }}" method="get">
+                            <input type="hidden" name="repository" value="$namespace\\Entity\\$className">
+                            <input type="hidden" name="alias" value="$endPath">
+                            <div class="form-group col-lg-2">
+                                <input type="text" class="form-control" name="id" placeholder="Placeholder">
+                            </div>
+                            <div class="form-group col-lg-2">
+                                <input type="submit" class="btn btn-primary" value="Aplicar filtros">
+                            </div>
+                        </form>
+                        <br clear="all"/>
+                    </div>
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    {% include '$namespaceRoute/$endPath/list.twig' %}
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+    </div>
+{% endblock %}
+EOL;
+
+    file_put_contents($indexDestination, $indexContent);
+    echo '[X] Gerado view index' . PHP_EOL;
+
+
+    $listContent = <<<EOL
+<table width="100%" class="table table-striped table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>{{ translate('Actions') }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in collection %}
+        <tr>
+            <td>
+                {{ item.id }}
+            </td>
+            <td>
+                <a href="{{ url('$endPath', {'action': 'view', 'id': item.id}) }}"
+                   class="btn btn-success btn-sm icon icon-left">
+                    <i class="fa fa-eye"></i>
+                    Visualizar
+                </a>
+                &nbsp;
+                <a href="{{ url('$endPath', {'action': 'edit', 'id': item.id}) }}"
+                   class="btn btn-warning btn-sm icon icon-left">
+                    <i class="fa fa-edit"></i>
+                    {{ translate('Edit') }}
+                </a>&nbsp;
+                <a href="#" class="btn btn-danger btn-sm icon icon-left delete-link" id="{{ item.id }}">
+                    <i class="fa fa-trash-o"></i>&nbsp;
+                    Excluir
+                </a>
+                <div style="display: none;">
+                    <form action="{{ url('$endPath', {'action': 'delete', 'id': item.id}) }}"
+                          method="post">
+                        <input type="submit" id="delete-{{ item.id }}"
+                               class="btn btn-danger btn-sm btn-icon icon-left" value="Remover">
+                    </form>
+                </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+EOL;
+
+    file_put_contents($listDestination, $listContent);
+    echo '[X] Gerado view list' . PHP_EOL;
+
+
+    $inactiveContent = <<<EOL
+{% extends "layout/layout.twig" %}
+
+{% block page_title %} - $className inativos{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">$className inativos</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <ul class="breadcrumb">
+                <li>
+                    <a href="{{ url('home') }}">Dashboard</a>
+                </li>
+                <li>$namespace &rarr; <a href="{{ url('$endPath') }}">$className</a> &rarr; $className inativos
+                </li>
+            </ul>
+            {% include 'partials/flash-messages.twig' %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <a href="{{ url('$endPath', {'action': 'add'}) }}"
+                       class="btn btn-primary icon icon-left">
+                        <i class="fa fa-plus"></i>
+                        {{ translate('Add new') }}
+                    </a>&nbsp;
+                    <a href="{{ url('$endPath', {'action': 'index'}) }}"
+                       class="btn btn-success">{{ translate('View actives') }}</a>
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    {% include '$namespaceRoute/$endPath/list.twig' %}
+                </div>
+                <!-- /.panel-body -->
+            </div>
+            <!-- /.panel -->
+        </div>
+    </div>
+{% endblock %}
+EOL;
+
+    file_put_contents($inactiveDestination, $inactiveContent);
+    echo '[X] Gerado view inactive' . PHP_EOL;
+
+
+    $viewContent = <<<EOL
+{% extends "layout/layout.twig" %}
+
+{% block page_title %} - Detalhes de $className{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Detalhes de $className</h1>
+        </div>
+    </div>
+
+    <div class="row">
+    <div class="col-lg-12">
+
+        <ul class="breadcrumb">
+            <li>
+                <a href="{{ url('home') }}">Dashboard</a>
+            </li>
+            <li>
+                <a href="{{ url('$namespaceRoute') }}">
+                    $namespace
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('$endPath') }}">
+                    $className
+                </a>
+            </li>
+            <li>Detalhes de $className</li>
+        </ul>
+
+        {% include 'partials/flash-messages.twig' %}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Detalhes de $className
+            </div>
+            <div class="panel-body">
+
+                <table width="100%" class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Valor</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>#</td>
+                        <td>{{ data.id }}</td>
+                    </tr>
+                    <tr>
+                        <td>Ação</td>
+                        <td>
+                            <a class="btn btn-warning"
+                               href="{{ url('$endPath', {'action': 'edit', 'id': data.id}) }}">
+                                Editar
+                            </a>
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <br clear="all"/><br/><br/><br/><br/><br/><br/>
+{% endblock %}
+EOL;
+
+    file_put_contents($viewContentDestination, $viewContent);
+    echo '[X] Gerado view de detalhes' . PHP_EOL;
+
+    if (!file_exists($scriptDestination)) {
+        file_put_contents($scriptDestination, '$(document).ready(function(){});');
+        echo '[X] Gerado script' . PHP_EOL . PHP_EOL;
+    }
+}
+
+/**
+ * @param $className
+ * @return string]
+ */
+function getRoute($className)
+{
+    return strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $className));
+}
+
+exit(PHP_EOL . 'Concluído' . PHP_EOL . PHP_EOL);

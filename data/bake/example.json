@@ -1,0 +1,34 @@
+{
+  "Namespace\\EntityName": {
+    "fieldOne": {
+      "type": "string",
+      "required": true,
+      "label": "Field One",
+      "class": "some custom class"
+    },
+    "fieldTwo": {
+      "type": "text",
+      "required": false,
+      "label": "Field Two",
+      "class": "some custom class"
+    },
+    "fieldThree": {
+      "type": "select",
+      "dataType": "string",
+      "required": false,
+      "label": "Field Three",
+      "class": "some custom class",
+      "options": {
+        "optionOneValue": "Option One Label",
+        "optionTwoValue": "Option Two Label"
+      }
+    },
+    "fieldFour": {
+      "type": "relation",
+      "relationType": "ManyToOne",
+      "relationEntity": "Fully\\Qualified\\Entity",
+      "required": true,
+      "label": "Field Four"
+    }
+  }
+}
