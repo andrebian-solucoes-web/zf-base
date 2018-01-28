@@ -39,12 +39,4 @@ $modules = [
     'ZendTwig',
 ];
 
-if (php_sapi_name() === 'cli-server') {
-    $modules[] = 'ZendDeveloperTools';
-
-    if (class_exists('\DoctrineDataFixtureModule\Command\FixturesLoadCommand')) {
-        $modules[] = 'DoctrineDataFixtureModule';
-    }
-}
-
 return $modules;
