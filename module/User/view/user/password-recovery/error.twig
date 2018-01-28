@@ -1,0 +1,25 @@
+{% extends "layout/layout.twig" %}
+
+{% block page_title %} - Erro na recuperação da senha{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="col-md-12 text-center">
+            <br/><br/>
+            <a href="/">
+                <img src="/img/logo.png">
+            </a>
+            <br/><br/>
+        </div>
+    </div>
+
+    <br clear="all"/><br/>
+
+    <div class="container">
+        <div class="col-md-12">
+            {% include 'partials/flash-messages.twig' %}
+        </div>
+    </div>
+
+    <br clear="all"/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+{% endblock %}

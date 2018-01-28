@@ -1,0 +1,14 @@
+<?php
+
+return [
+    'mail' => [
+        'sendgrid' => [
+            'api_key' => 'YOUR_SENDGRI_API_KEY',
+        ],
+        'transport' => 'sendgrid',
+        'connection_config' => [
+            'from' => 'user@domain',
+            'reply_to' => 'user@domain'
+        ],
+    ],
+];

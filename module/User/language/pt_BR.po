@@ -1,0 +1,6 @@
+msgid "The passwords doesn't match."
+msgstr "As senhas não coincidem."
+
+msgid "Password recovery"
+msgstr "Recuperação de senha"
+

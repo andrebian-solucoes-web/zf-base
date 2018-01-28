@@ -1,0 +1,27 @@
+{% extends 'layout/layout.twig' %}
+
+{% block page_title %}{{ translate('Page not found') }} - {% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="col-md-12">
+            <div class="row" id="error-page">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <div class="box">
+                        <p class="text-center">
+                            <img src="/img/logo.png" alt="Logo da Empresa">
+                        </p>
+                        <h3>{{ translate('The requested page does not exist') }}</h3>
+                        <h4 class="text-muted">Error 404 - {{ translate('Page not found') }}</h4>
+                        <p class="text-center">
+                            {{ translate('Try another URL or use the site menu') }}
+                        </p>
+                        <p class="buttons">
+                            <a href="/" class="btn btn-primary"><i class="fa fa-home"></i> {{ translate('Home') }}</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

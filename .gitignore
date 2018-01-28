@@ -6,6 +6,7 @@ data/cache/*
 tmp/*
 !tmp/.gitkeep
 data/DoctrineORMModule/Proxy/*
+!data/DoctrineORMModule/Proxy/.gitkeep
 !data/DoctrineORMModule/.gitkeep
 public/files/*
 !public/files/.gitkeep

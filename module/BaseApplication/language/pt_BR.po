@@ -1,0 +1,119 @@
+msgid "Name"
+msgstr "Nome"
+
+msgid "Status"
+msgstr "Situação"
+
+msgid "Last update"
+msgstr "Última alteração"
+
+msgid "Actions"
+msgstr "Ações"
+
+msgid "Active"
+msgstr "Ativo"
+
+msgid "Inactive"
+msgstr "Inativo"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Save"
+msgstr "Salvar"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Add new"
+msgstr "Adicionar novo"
+
+msgid "Administrative area"
+msgstr "Administrativo"
+
+msgid "View inactives"
+msgstr "Ver inativos"
+
+msgid "View actives"
+msgstr "Ver ativos"
+
+msgid "Value is required and can't be empty"
+msgstr "Valor é requerido e não pode ser vazio"
+
+msgid "The input is not greater than '0'"
+msgstr "Selecione uma opção"
+
+msgid "Register added"
+msgstr "Registro salvo"
+
+msgid "Register edited"
+msgstr "Registro editado"
+
+msgid "Register deleted"
+msgstr "Registro removido"
+
+msgid "Register inactivated"
+msgstr "Registro inativado"
+
+msgid "Sun"
+msgstr "Dom"
+
+msgid "Mon"
+msgstr "Seg"
+
+msgid "Tue"
+msgstr "Ter"
+
+msgid "Wed"
+msgstr "Qua"
+
+msgid "Thu"
+msgstr "Qui"
+
+msgid "Fri"
+msgstr "Sex"
+
+msgid "Sat"
+msgstr "Sab"
+
+msgid "Select an option"
+msgstr "Selecione uma opção"
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "View Inactive"
+msgstr "Ver Inativos"
+
+msgid "Action"
+msgstr "Ação"
+
+msgid "Phone"
+msgstr "Telefone"
+
+msgid "Inactivate"
+msgstr "Inativar"
+
+msgid "Activate"
+msgstr "Ativar"
+
+msgid "Welcome"
+msgstr "Bem Vindo(a)"
+
+msgid "Invalid Method"
+msgstr "Método Inválido"
+
+msgid "Help"
+msgstr "Ajuda"
+
+msgid "Introduce news"
+msgstr "Novidades"
+
+msgid "Changelog"
+msgstr "Log de Alterações"
+
+msgid "Our best practices"
+msgstr "Nossas melhores práticas"
+
+msgid "Recommendations"
+msgstr "Recomendações"
