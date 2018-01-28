@@ -17,7 +17,7 @@ return [
         // namespace, the value of that key the specific path to that module's
         // Module class.
         'module_paths' => [
-            './modules',
+            './module',
             './vendor',
         ],
 
