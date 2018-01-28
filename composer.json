@@ -58,10 +58,7 @@
         "development-disable": "zf-development-mode disable",
         "development-enable": "zf-development-mode enable",
         "development-status": "zf-development-mode status",
-        "post-create-project-cmd": [
-            "@development-enable",
-            "rm -rf .git"
-        ],
+        "post-create-project-cmd": "rm -rf .git",
         "serve": "php -S 0.0.0.0:8080 -t public",
         "test": "phpunit",
         "fixtures-init": "./vendor/bin/doctrine-module orm:fixtures:load",
