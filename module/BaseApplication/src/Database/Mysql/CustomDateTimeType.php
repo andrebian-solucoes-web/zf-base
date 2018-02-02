@@ -24,7 +24,7 @@ class CustomDateTimeType extends DateTimeType
      *      ...
      *      'dbal' => [
      *          'types' => [
-     *              'datetime' => \Application\Database\Mysql\CustomDateTimeType::class
+     *              'datetime' => \BaseApplication\Database\Mysql\CustomDateTimeType::class
      *          ]
      *      ]
      * ]

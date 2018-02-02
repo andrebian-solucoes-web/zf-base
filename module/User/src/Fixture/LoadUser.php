@@ -21,7 +21,7 @@ class LoadUser implements FixtureInterface, OrderedFixtureInterface
     {
         $admin = $manager->getRepository(Role::class)
             ->findOneBy([
-                'name' => 'Administrador'
+                'name' => 'Admin'
             ]);
 
         $user = new User([

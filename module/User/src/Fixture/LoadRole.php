@@ -19,7 +19,7 @@ class LoadRole implements FixtureInterface, OrderedFixtureInterface
     public function load(ObjectManager $manager)
     {
         $manager->persist(new Role([
-            'name' => 'Administrador'
+            'name' => 'Admin'
         ]));
 
         $manager->flush();
