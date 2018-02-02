@@ -18,3 +18,5 @@ error_log
 fabfile.pyc
 *.log
 scripts/bake.php
+build/*
+!build/.gitkeep

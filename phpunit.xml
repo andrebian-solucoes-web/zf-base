@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit colors="true">
+    <testsuites>
+        <testsuite name="BaseApplication Test Suite">
+            <directory>./module/BaseApplication/test</directory>
+        </testsuite>
+        <!--<testsuite name="User Test Suite">-->
+            <!--<directory>./module/User/test</directory>-->
+        <!--</testsuite>-->
+    </testsuites>
+    <filter>
+        <whitelist
+                addUncoveredFilesFromWhitelist="true"
+                processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./module/BaseApplication/src</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="./build/coverage-html" charset="UTF-8" yui="true" highlight="true"
+             lowUpperBound="35" highLowerBound="75"/>
+    </logging>
+</phpunit>

@@ -16,12 +16,12 @@ class FormNameField
             'name' => 'name',
             'type' => Text::class,
             'options' => [
-                'label' => 'Nome'
+                'label' => 'Name'
             ],
             'attributes' => [
                 'class' => 'form-control',
                 'id' => 'name',
-                'placeholder' => 'Nome',
+                'placeholder' => 'Name',
                 'autocomplete' => 'Off'
             ]
         ];
