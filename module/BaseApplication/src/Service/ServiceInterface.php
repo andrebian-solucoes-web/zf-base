@@ -5,6 +5,7 @@ namespace BaseApplication\Service;
 /**
  * Interface ServiceInterface
  * @package BaseApplication\Service
+ * @codeCoverageIgnore
  */
 interface ServiceInterface
 {

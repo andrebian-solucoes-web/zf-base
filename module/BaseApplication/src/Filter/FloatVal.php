@@ -24,6 +24,7 @@ class FloatVal extends AbstractFilter
             return $value;
         }
         $value = (string)$value;
+        $value = str_replace(['.', ','], ['', '.'], $value);
 
         return (float)$value;
     }

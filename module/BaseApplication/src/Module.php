@@ -22,6 +22,7 @@ use Zend\View\Renderer\PhpRenderer;
 /**
  * Class Module
  * @package BaseApplication
+ * @codeCoverageIgnore
  */
 class Module
 {

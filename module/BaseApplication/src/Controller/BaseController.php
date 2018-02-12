@@ -7,6 +7,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 /**
  * Class BaseController
  * @package BaseApplication\Controller
+ * @codeCoverageIgnore
  */
 abstract class BaseController extends AbstractActionController
 {

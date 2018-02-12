@@ -5,6 +5,7 @@ namespace BaseApplication\Entity;
 /**
  * Interface ApplicationEntityInterface
  * @package BaseApplication\Entity
+ * @codeCoverageIgnore
  */
 interface ApplicationEntityInterface
 {

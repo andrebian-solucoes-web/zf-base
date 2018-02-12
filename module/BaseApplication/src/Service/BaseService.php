@@ -99,14 +99,15 @@ abstract class BaseService implements ServiceInterface
 
     /**
      * @param array $data
+     * @param bool $isTest
      * @return mixed|null|object
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\TransactionRequiredException
      */
-    public function save(array $data)
+    public function save(array $data, $isTest = false)
     {
-        $entityName = $this->getEntityName();
+        $entityName = $this->getEntityName($isTest);
 
         if (!isset($data['id']) || empty($data['id'])) {
             $entity = new $entityName($data);
@@ -126,12 +127,20 @@ abstract class BaseService implements ServiceInterface
     /**
      * @return array|string
      */
-    private function getEntityName()
+    private function getEntityName($isTest = false)
     {
         $entityName = get_called_class();
         $entityName = explode('\\', $entityName);
-        $entityName = $entityName[0] . '\\Entity\\' . str_replace('Service', '', end($entityName));
+        $treatedEntityName = $entityName[0] . '\\Entity\\' . str_replace('Service', '', end($entityName));
 
-        return $entityName;
+        if ($isTest) {
+            $lastPiece = end($entityName);
+            unset($entityName[(count($entityName))-1]);
+
+            $treatedEntityName = implode('\\', $entityName);
+            $treatedEntityName .= '\\' . str_replace('Service', 'Entity', $lastPiece);
+        }
+
+        return $treatedEntityName;
     }
 }

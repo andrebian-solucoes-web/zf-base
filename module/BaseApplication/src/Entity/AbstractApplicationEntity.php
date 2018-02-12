@@ -9,6 +9,7 @@ use Zend\Hydrator\ClassMethods;
 /**
  * Class AbstractApplicationEntity
  * @package BaseApplication\Entity
+ * @codeCoverageIgnore
  */
 abstract class AbstractApplicationEntity implements ApplicationEntityInterface
 {
