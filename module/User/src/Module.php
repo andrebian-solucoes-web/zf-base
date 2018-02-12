@@ -97,7 +97,7 @@ class Module implements DependencyIndicatorInterface
     public function getModuleDependencies()
     {
         return [
-            'Application'
+            'BaseApplication'
         ];
     }
 }

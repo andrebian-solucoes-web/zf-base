@@ -36,6 +36,7 @@ $modules = [
     'Zend\Validator',
     'SendGridTransportModule',
     'BaseApplication',
+    'User',
     'ZendTwig',
 ];
 

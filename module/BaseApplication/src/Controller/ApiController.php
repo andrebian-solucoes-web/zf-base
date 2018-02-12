@@ -7,6 +7,7 @@ use Zend\Mvc\Controller\AbstractRestfulController;
 /**
  * Class ApiController
  * @package BaseApplication\Controller
+ * @codeCoverageIgnore
  */
 class ApiController extends AbstractRestfulController
 {
