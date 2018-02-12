@@ -14,7 +14,7 @@ abstract class AbstractApplicationRepository extends EntityRepository implements
     /**
      * @param array $data
      * @param array $orderOptions
-     * @return array|\BaseApplication\Model\SearchResult|mixed
+     * @return mixed
      */
     public function search(array $data, $orderOptions = [])
     {

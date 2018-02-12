@@ -2,18 +2,18 @@
 
 namespace BaseApplication\Repository;
 
-use BaseApplication\Model\SearchResult;
 
 /**
  * Interface ApplicationRepositoryInterface
  * @package BaseApplication\Repository
+ * @codeCoverageIgnore
  */
 interface ApplicationRepositoryInterface
 {
     /**
      * @param array $data
      * @param bool $returnArrayForExcel
-     * @return SearchResult|array
+     * @return mixed
      */
     public function search(array $data, $returnArrayForExcel = false);
 
