@@ -5,21 +5,20 @@ namespace BaseApplication\View\Helper;
 use Zend\View\Helper\AbstractHelper;
 
 /**
- * Class ZapLoading
+ * Class ZapLoadingViewHelper
  * @package BaseApplication\View\Helper
  */
-class ZapLoading extends AbstractHelper
+class ZapLoadingViewHelper extends AbstractHelper
 {
     /**
      * @param int $width
      * @param int $height
      * @param string $customClass
-     *
      * @return string
      */
     public function __invoke($width = 50, $height = 50, $customClass = '')
     {
-        echo <<<EOL
+        $style = <<<EOL
             <style>
                 /*
                     Zap Loading
@@ -105,7 +104,7 @@ class ZapLoading extends AbstractHelper
             </style>
 EOL;
 
-        $loading = '<svg class="spinner-container ' . $customClass . '" width="' . $width . 'px" height="' . $height . 'px" viewBox="0 0 52 52"><circle class="path" cx="26px" cy="26px" r="20px" fill="none" stroke-width="4px"></circle></svg>';
+        $loading = $style . '<svg class="spinner-container ' . $customClass . '" width="' . $width . 'px" height="' . $height . 'px" viewBox="0 0 52 52"><circle class="path" cx="26px" cy="26px" r="20px" fill="none" stroke-width="4px"></circle></svg>';
 
         return $loading;
     }

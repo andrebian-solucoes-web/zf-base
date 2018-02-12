@@ -70,9 +70,7 @@ An e-mail wrapper. Easily send transactional e-mails.
 
 - AuthUser - Fetch logged user in session
 - BrazilianStateHelper - Easily populate forms with Brazilian States
-- FormatDate - Format a given DateTime object with some pattern (not really necessary, but it exists...)
-- IsDevMode - Validate when the application is running with the built-in PHP Server
-- JsonDecode - Decode json data in views
+- JsonDecode - Decode json data in views. Useful for twig templates
 - Slugify - Generates slugs by a given string
 - Zap Loading - A Customizable WhatsApp Web loading clone
 

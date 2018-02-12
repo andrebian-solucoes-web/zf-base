@@ -9,7 +9,7 @@ use Zend\View\Helper\AbstractHelper;
  * Class Slugify
  * @package BaseApplication\View\Helper
  */
-class Slugify extends AbstractHelper
+class SlugifyViewHelper extends AbstractHelper
 {
     public function __invoke($string)
     {

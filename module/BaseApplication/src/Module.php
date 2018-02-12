@@ -8,7 +8,7 @@ use BaseApplication\View\Helper\BrazilianStateHelperComboViewHelper;
 use BaseApplication\View\Helper\FormatDateViewHelper;
 use BaseApplication\View\Helper\IsDevModeViewHelper;
 use BaseApplication\View\Helper\JsonDecodeViewHelper;
-use BaseApplication\View\Helper\Slugify;
+use BaseApplication\View\Helper\SlugifyViewHelper;
 use Exception;
 use User\Assets\SessionNamespace;
 use Zend\Authentication\AuthenticationService;
@@ -55,11 +55,11 @@ class Module
     {
         return [
             'invokables' => [
-                'zapLoading' => View\Helper\ZapLoading::class,
+                'zapLoading' => View\Helper\ZapLoadingViewHelper::class,
                 'isDevMode' => IsDevModeViewHelper::class,
                 'jsonDecode' => JsonDecodeViewHelper::class,
                 'formatDate' => FormatDateViewHelper::class,
-                'slugify' => Slugify::class,
+                'slugify' => SlugifyViewHelper::class,
                 'brazilianStateCombo' => BrazilianStateHelperComboViewHelper::class,
                 'user' => AuthUserViewHelper::class,
                 'authUser' => AuthUserViewHelper::class,
