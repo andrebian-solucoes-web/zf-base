@@ -106,6 +106,9 @@ An e-mail wrapper. Easily send transactional e-mails.
 
 
 
+## Running tests
+
+`composer test`
 
  
 ## License
