@@ -90,7 +90,7 @@ abstract class CrudController extends BaseController
                 }
 
                 /** @var ServiceInterface $service */
-                $service = $this->getServiceLocator()->get($this->service);
+                $service = $this->getServiceManager()->get($this->service);
 
                 if ($service->save($data)) {
                     $this->flashMessenger()->setNamespace('success')
@@ -123,7 +123,7 @@ abstract class CrudController extends BaseController
     public function editAction()
     {
         /** @var EntityManager $entityManager */
-        $entityManager = $this->getServiceLocator()->get(EntityManager::class);
+        $entityManager = $this->getServiceManager()->get(EntityManager::class);
         $errorMessages = [];
         /** @var Request $request */
         $request = $this->getRequest();
@@ -168,7 +168,7 @@ abstract class CrudController extends BaseController
 
             if ($form->isValid()) {
                 /** @var ServiceInterface $service */
-                $service = $this->getServiceLocator()->get($this->service);
+                $service = $this->getServiceManager()->get($this->service);
 
                 $data = $form->getData();
                 if (method_exists($this, 'bindDataToService')) {
@@ -208,7 +208,7 @@ abstract class CrudController extends BaseController
         if ($request->isPost() || $request->isDelete()) {
             $id = (int)$this->params()->fromRoute('id', 0);
             /** @var ServiceInterface $service */
-            $service = $this->getServiceLocator()->get($this->service);
+            $service = $this->getServiceManager()->get($this->service);
 
             if ($service->delete($id)) {
                 $this->flashMessenger()->setNamespace('success')
@@ -234,7 +234,7 @@ abstract class CrudController extends BaseController
         if ($request->isPost() || $request->isDelete()) {
             $id = (int)$this->params()->fromRoute('id', 0);
             /** @var ServiceInterface $service */
-            $service = $this->getServiceLocator()->get($this->service);
+            $service = $this->getServiceManager()->get($this->service);
 
             if ($service->inactivate($id)) {
                 $this->flashMessenger()->setNamespace('success')
@@ -260,7 +260,7 @@ abstract class CrudController extends BaseController
         if ($request->isPost() || $request->isDelete()) {
             $id = (int)$this->params()->fromRoute('id', 0);
             /** @var ServiceInterface $service */
-            $service = $this->getServiceLocator()->get($this->service);
+            $service = $this->getServiceManager()->get($this->service);
 
             if ($service->activate($id)) {
                 $this->flashMessenger()->setNamespace('success')
@@ -284,7 +284,7 @@ abstract class CrudController extends BaseController
     public function viewAction()
     {
         /** @var EntityManager $entityManager */
-        $entityManager = $this->getServiceLocator()->get(EntityManager::class);
+        $entityManager = $this->getServiceManager()->get(EntityManager::class);
         $id = (int)$this->params()->fromRoute('id', 0);
         $data = $entityManager->find($this->repository, $id);
 
@@ -304,7 +304,7 @@ abstract class CrudController extends BaseController
     public function indexAction($active = true)
     {
         /** @var EntityManager $entityManager */
-        $entityManager = $this->getServiceLocator()->get(EntityManager::class);
+        $entityManager = $this->getServiceManager()->get(EntityManager::class);
         $this->criteria['active'] = $active;
 
         $collection = $entityManager->getRepository($this->repository)->findBy($this->criteria, $this->orderBy);

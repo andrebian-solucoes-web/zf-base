@@ -20,8 +20,9 @@ class AuthController extends BaseController
 {
     /**
      * @return \Zend\Http\Response|ViewModel
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
      */
     public function indexAction()
     {
@@ -40,7 +41,7 @@ class AuthController extends BaseController
                 $auth->setStorage($sessionStorage);
 
                 /** @var Adapter $authAdapter */
-                $authAdapter = $this->getServiceLocator()->get(Adapter::class);
+                $authAdapter = $this->getServiceManager()->get(Adapter::class);
                 $authAdapter->setUsername($data['email'])->setPassword($data['password']);
 
                 $result = $auth->authenticate($authAdapter);
@@ -48,7 +49,7 @@ class AuthController extends BaseController
                     $authUser = $auth->getIdentity()['user'];
                     $sessionStorage->write($authUser);
                     /** @var UserService $userService */
-                    $userService = $this->getServiceLocator()->get(UserService::class);
+                    $userService = $this->getServiceManager()->get(UserService::class);
                     $userService->updateLastLogin((int)$authUser['id']);
 
                     return $this->redirect()->toRoute('home');

@@ -2,7 +2,7 @@
 
 namespace BaseApplication\Controller;
 
-use Application\Repository\ApplicationRepositoryInterface;
+use BaseApplication\Repository\ApplicationRepositoryInterface;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use Zend\View\Model\ViewModel;
@@ -29,7 +29,7 @@ class SearchController extends BaseController
         }
 
         /** @var EntityManager $entityManager */
-        $entityManager = $this->getServiceLocator()->get(EntityManager::class);
+        $entityManager = $this->getServiceManager()->get(EntityManager::class);
         /** @var ApplicationRepositoryInterface $repository */
         $repository = $entityManager->getRepository($repositoryClassName);
         $data = $repository->search($data);

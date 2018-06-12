@@ -14,7 +14,7 @@ class ApiController extends AbstractRestfulController
     /**
      * @return \Zend\ServiceManager\ServiceLocatorInterface
      */
-    protected function getServiceLocator()
+    protected function getServiceManager()
     {
         return $this->getEvent()->getApplication()->getServiceManager();
     }

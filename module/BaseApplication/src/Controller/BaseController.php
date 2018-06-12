@@ -14,7 +14,7 @@ abstract class BaseController extends AbstractActionController
     /**
      * @return \Zend\ServiceManager\ServiceLocatorInterface
      */
-    protected function getServiceLocator()
+    protected function getServiceManager()
     {
         return $this->getEvent()->getApplication()->getServiceManager();
     }

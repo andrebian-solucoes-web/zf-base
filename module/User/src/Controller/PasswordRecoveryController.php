@@ -18,8 +18,8 @@ class PasswordRecoveryController extends BaseController
 {
     /**
      * @return \Zend\Http\Response|ViewModel
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function indexAction()
     {
@@ -27,7 +27,7 @@ class PasswordRecoveryController extends BaseController
         $request = $this->getRequest();
         if ($request->isPost()) {
             /** @var PasswordRecoveryService $passwordRecoveryService */
-            $passwordRecoveryService = $this->getServiceLocator()->get(PasswordRecoveryService::class);
+            $passwordRecoveryService = $this->getServiceManager()->get(PasswordRecoveryService::class);
             if ($passwordRecoveryService->startRecoverPassword($request->getPost('email'))) {
                 $this->flashMessenger()->setNamespace('success')->addMessage('E-mail para a recuperação de senha enviado. Siga as instruções do mesmo.');
 
@@ -52,7 +52,7 @@ class PasswordRecoveryController extends BaseController
         $email = $this->params()->fromQuery('email');
         $token = $this->params()->fromQuery('token');
 
-        $entityManager = $this->getServiceLocator()->get(EntityManager::class);
+        $entityManager = $this->getServiceManager()->get(EntityManager::class);
         /** @var PasswordRecoveryToken $passwordRecoveryToken */
         if (!$passwordRecoveryToken = $entityManager->getRepository(PasswordRecoveryToken::class)->findOneBy([
             'active' => true,
