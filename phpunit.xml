@@ -19,4 +19,9 @@
         <log type="coverage-html" target="./build/coverage-html" charset="UTF-8" yui="true" highlight="true"
              lowUpperBound="35" highLowerBound="75"/>
     </logging>
+    <!--<groups>-->
+        <!--<include>-->
+            <!--<group>Mail</group>-->
+        <!--</include>-->
+    <!--</groups>-->
 </phpunit>

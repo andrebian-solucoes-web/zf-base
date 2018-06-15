@@ -153,20 +153,21 @@ class Mail
 
     /**
      * @param $html
-     *
+     * @param bool $isTest
      * @return $this
      */
-    public function logMail($html)
+    public function logMail($html, $isTest = false)
     {
-        if (php_sapi_name() != 'cli' && strstr($_SERVER['HTTP_HOST'], 'localhost') != '') {
+        $pathLog = __DIR__ . '/../../../../tmp/';
+        $file = $this->to . date('H_i_s') . '.html';
+        $pathFile = $pathLog . $file;
 
-            $pathLog = str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']) . "../tmp/";
-            $file = $this->to . date('H_i_s') . '.html';
-            $pathFile = $pathLog . $file;
+        $f = fopen($pathFile, "w+");
+        fwrite($f, $html);
+        fclose($f);
 
-            $f = fopen($pathFile, "w+");
-            fwrite($f, $html);
-            fclose($f);
+        if ($isTest) {
+            unlink($pathFile);
         }
 
         return $this;
@@ -176,10 +177,9 @@ class Mail
      * @param $page
      * @param array $data
      * @param string $moduleName
-     *
-     * @return mixed
+     * @param bool $isTest
      */
-    public function renderView($page, array $data, $moduleName = '')
+    public function renderView($page, array $data, $moduleName = '', $isTest = false)
     {
         $model = new ViewModel();
 
@@ -187,7 +187,7 @@ class Mail
 
         $class = get_class($this->view);
         if ($class == 'Zend\View\Renderer\PhpRenderer' && $moduleName) {
-            $templatePath = dirname(dirname(dirname(dirname(__DIR__)))) . '/' . ucfirst($moduleName) . '/';
+            $templatePath = dirname(dirname(dirname(dirname(__DIR__)))) . '/module/' . ucfirst($moduleName) . '/';
             $templatePath .= 'view/';
 
             $resolver = new TemplatePathStack();
@@ -199,19 +199,19 @@ class Mail
         $model->setOption('has_parent', true);
         $model->setVariables($data);
         $html = $this->view->render($model);
-        $this->logMail($html);
+        $this->logMail($html, $isTest);
 
         return $html;
     }
 
     /**
      * @param string $moduleName
-     *
+     * @param bool $isTest
      * @return $this
      */
-    public function prepare($moduleName = '')
+    public function prepare($moduleName = '', $isTest = false)
     {
-        $html = new MimePart($this->renderView($this->page, $this->data, $moduleName));
+        $html = new MimePart($this->renderView($this->page, $this->data, $moduleName, $isTest));
         $html->type = "text/html";
 
         $body = new MimeMessage();
@@ -226,7 +226,7 @@ class Mail
 
         if (count($this->attachments) > 0) {
             $mimeMessage = $this->message->getBody();
-            if (!$mimeMessage instanceof MimeMessage) {
+            if (! $mimeMessage instanceof MimeMessage) {
                 $this->setBody(new MimePart($mimeMessage));
                 $mimeMessage = $this->message->getBody();
             }
@@ -237,7 +237,7 @@ class Mail
             $attachmentParts = array();
             $info = new finfo(FILEINFO_MIME_TYPE);
             foreach ($this->attachments as $attachment) {
-                if (!is_file($attachment)) {
+                if (! is_file($attachment)) {
                     continue;
                 } // If checked file is not valid, continue to the next
 
