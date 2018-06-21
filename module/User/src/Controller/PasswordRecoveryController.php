@@ -28,13 +28,16 @@ class PasswordRecoveryController extends BaseController
         if ($request->isPost()) {
             /** @var PasswordRecoveryService $passwordRecoveryService */
             $passwordRecoveryService = $this->getServiceManager()->get(PasswordRecoveryService::class);
-            if ($passwordRecoveryService->startRecoverPassword($request->getPost('email'))) {
-                $this->flashMessenger()->setNamespace('success')->addMessage('E-mail para a recuperação de senha enviado. Siga as instruções do mesmo.');
 
-                return $this->redirect()->toRoute('login');
+            $flashMessengerNamespace = 'error';
+            $flashMessengerMessage = 'O e-mail informado não está cadastrado em nossa base de dados.';
+
+            if ($passwordRecoveryService->startRecoverPassword($request->getPost('email'))) {
+                $flashMessengerNamespace = 'success';
+                $flashMessengerMessage = 'E-mail para a recuperação de senha enviado. Siga as instruções do mesmo.';
             }
 
-            $this->flashMessenger()->setNamespace('error')->addMessage('O e-mail informado não está cadastrado em nossa base de dados.');
+            $this->flashMessenger()->setNamespace($flashMessengerNamespace)->addMessage($flashMessengerMessage);
 
             return $this->redirect()->toRoute('login');
         }

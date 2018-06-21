@@ -87,6 +87,10 @@ class Adapter implements AdapterInterface
         /** @var UserRepository $repository */
         $repository = $this->entityManager->getRepository(User::class);
 
+        $resultCode = Result::FAILURE_CREDENTIAL_INVALID;
+        $identity = null;
+        $resultText = ['Nok'];
+
         /** @var User $user */
         $user = $repository->findByEmailAndPassword($this->getUsername(), $this->getPassword());
 
@@ -99,9 +103,11 @@ class Adapter implements AdapterInterface
                 'last_login' => time(),
             ];
 
-            return new Result(Result::SUCCESS, ['user' => $userData], ['Ok']);
+            $resultCode = Result::SUCCESS;
+            $identity = ['user' => $userData];
+            $resultText = ['Ok'];
         }
 
-        return new Result(Result::FAILURE_CREDENTIAL_INVALID, null, ['Nok']);
+        return new Result($resultCode, $identity, $resultText);
     }
 }

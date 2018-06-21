@@ -19,6 +19,7 @@ use Zend\ServiceManager\ServiceManager;
 /**
  * Class Module
  * @package User
+ * @codeCoverageIgnore
  */
 class Module implements DependencyIndicatorInterface
 {

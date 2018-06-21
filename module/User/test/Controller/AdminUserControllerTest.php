@@ -17,7 +17,7 @@ use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
  * @package Test\User\Controller
  *
  * @group User
- * @group Controller
+ * @group Controllers
  */
 class AdminUserControllerTest extends AbstractHttpControllerTestCase
 {

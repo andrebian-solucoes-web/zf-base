@@ -63,7 +63,8 @@ class PasswordRecoveryService
                 'recoveryLink' => '/recovery-password-action?email=' . $email . '&token=' . $token
             ];
 
-            $from = $this->serviceManager->get('config')['mail']['connection_config']['from'];
+            $config = $this->serviceManager->get('config');
+            $from = $config['mail']['connection_config']['from'];
 
             $emailService->setTo($email)
                 ->setFrom($from)
