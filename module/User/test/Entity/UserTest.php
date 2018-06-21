@@ -3,14 +3,17 @@
 namespace Tests\Unit\User\Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit_Framework_TestCase;
+use User\Entity\PasswordRecoveryToken;
+use User\Entity\Role;
 use User\Entity\User;
 
 /**
  * Class UserTest
  * @package Tests\Unit\User\Entity
  *
- * @group Unit
+ * @group User
  * @group Entity
  */
 class UserTest extends PHPUnit_Framework_TestCase
@@ -22,6 +25,9 @@ class UserTest extends PHPUnit_Framework_TestCase
     {
         $entity = new User();
 
+        $passwordRecoveries = new ArrayCollection();
+        $passwordRecoveries->add(new PasswordRecoveryToken());
+
         $entity->setName('1');
         $entity->setPassword('11231321');
         $entity->setLastLogin(new DateTime());
@@ -31,6 +37,8 @@ class UserTest extends PHPUnit_Framework_TestCase
         $entity->setCreated(new DateTime());
         $entity->setModified(new DateTime());
         $entity->setActive('1');
+        $entity->setRole(new Role());
+        $entity->setPasswordRecoveries($passwordRecoveries);
 
         $this->assertNotNull($entity->getName());
         $this->assertNotNull($entity->getPassword());
@@ -41,5 +49,8 @@ class UserTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($entity->getCreated());
         $this->assertNotNull($entity->getModified());
         $this->assertNotNull($entity->isActive());
+        $this->assertNotNull(sprintf($entity));
+        $this->assertNotNull($entity->getPasswordRecoveries());
+        $this->assertNotNull($entity->getRole());
     }
 }

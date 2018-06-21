@@ -83,20 +83,13 @@ class User extends AbstractApplicationEntity
     }
 
     /**
-     * Set password
-     *
-     * @param string $password
-     * @param bool $ignoreHash
-     *
+     * @param $password
      * @return $this
      */
-    public function setPassword($password, $ignoreHash = false)
+    public function setPassword($password)
     {
         if (strlen($password) >= 6) {
             $this->password = password_hash($password, PASSWORD_DEFAULT);
-            if ($ignoreHash) {
-                $this->password = $password;
-            }
         }
 
         return $this;

@@ -4,15 +4,16 @@
         <testsuite name="BaseApplication Test Suite">
             <directory>./module/BaseApplication/test</directory>
         </testsuite>
-        <!--<testsuite name="User Test Suite">-->
-            <!--<directory>./module/User/test</directory>-->
-        <!--</testsuite>-->
+        <testsuite name="User Test Suite">
+            <directory>./module/User/test</directory>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist
                 addUncoveredFilesFromWhitelist="true"
                 processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./module/BaseApplication/src</directory>
+            <directory suffix=".php">./module/User/src</directory>
         </whitelist>
     </filter>
     <logging>
@@ -21,7 +22,7 @@
     </logging>
     <!--<groups>-->
         <!--<include>-->
-            <!--<group>Mail</group>-->
+            <!--<group>Entity</group>-->
         <!--</include>-->
     <!--</groups>-->
 </phpunit>
