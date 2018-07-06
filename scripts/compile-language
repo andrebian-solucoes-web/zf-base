@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [ "$1" != "" ]; then
+
+    BASE="module"
+
+    echo ""
+    echo -e "\033[33mCompiling file '$BASE/$1/language/$2.po' \033[0m"
+    echo ""
+
+    output=$BASE/$1/language/$2.mo
+
+
+    echo -e "\033[33mE storing in '$output' \033[0m"
+    echo ""
+
+    msgfmt $BASE/$1/language/$2.po -o $output
+
+    echo -e "\033[32mTranslation file compiled. \033[0m"
+    echo ""
+
+
+else
+    echo ""
+    echo -e "\033[31mType the module name and language to compile."
+    echo -e "Example: "
+    echo ""
+    echo -e "compile-language User pt_BR"
+    echo ""
+    echo -e "\033[0m"
+fi

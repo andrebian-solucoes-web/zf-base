@@ -267,7 +267,6 @@ class Mail
             $this->transport->send($this->message);
             $sent = true;
         } catch (Exception $e) {
-            var_dump($e->getMessage());
             $sent = false;
         }
 

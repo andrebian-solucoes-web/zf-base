@@ -4,6 +4,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 if (strpos($argv[1], '.json') !== false) {
     $file = $argv[1];
+    $file = __DIR__ . '/../data/bake/' . $file;
     parseFile($file);
 } else {
     if (is_dir($argv[1])) {
@@ -50,14 +51,14 @@ function parseFile($file)
 function mountEntity($data, $namespace, $className)
 {
     $baseClassName = $className;
-    $path = __DIR__ . '/../modules/' . $namespace . '/src/Entity';
+    $path = __DIR__ . '/../module/' . $namespace . '/src/Entity';
     if (!is_dir($path)) {
         mkdir($path, 0777, true);
     }
     $destination = $path . '/' . $className . '.php';
 
     $header = <<<EOL
-<?php 
+<?php
 
 namespace $namespace\Entity;
 
@@ -132,7 +133,7 @@ EOL;
      * $joinColumn
      */
     private $$field;
-    
+
 EOL;
 
                 $gettersAndSetters .= <<<EOL
@@ -144,7 +145,7 @@ EOL;
     {
         return $inside;
     }
-    
+
     /**
      * @param $$field $targetName
      * @return $baseClassName
@@ -184,7 +185,7 @@ EOL;
     {
         return $inside;
     }
-   
+
     /**
      * @return $baseClassName
      */
@@ -231,7 +232,7 @@ EOL;
     {
         return $inside;
     }
-   
+
     /**
      * @return $baseClassName
      */
@@ -273,14 +274,14 @@ function mountForm($data, $namespace, $className)
 {
     $className .= 'Form';
     $baseClassName = $className;
-    $path = __DIR__ . '/../modules/' . $namespace . '/src/Form';
+    $path = __DIR__ . '/../module/' . $namespace . '/src/Form';
     if (!is_dir($path)) {
         mkdir($path, 0777, true);
     }
     $destination = $path . '/' . $className . '.php';
 
     $header = <<<EOL
-<?php 
+<?php
 
 namespace $namespace\Form;
 
@@ -292,7 +293,7 @@ use Zend\Form\Form;
 use Application\Assets\Form\FormSaveButton;
 use Zend\Form\Element\Text;
 use Zend\Form\Element\Hidden;
-use Zend\Form\Csrf;
+use Zend\Form\Element\Csrf;
 
 EOL;
 
@@ -408,6 +409,7 @@ EOL;
                 }
 
                 $fields .= <<<EOL
+
         \$this->add([
             'name' => '$fieldName',
             'type' => Select::class,
@@ -429,6 +431,7 @@ EOL;
                 break;
             default:
                 $fields .= <<<EOL
+
         \$this->add([
             'name' => '$fieldName',
             'type' => $type,
@@ -470,14 +473,14 @@ EOL;
 function mountFormFilter($data, $namespace, $className)
 {
     $className .= 'FormFilter';
-    $path = __DIR__ . '/../modules/' . $namespace . '/src/Form';
+    $path = __DIR__ . '/../module/' . $namespace . '/src/Form';
     if (!is_dir($path)) {
         mkdir($path, 0777, true);
     }
     $destination = $path . '/' . $className . '.php';
 
     $header = <<<EOL
-<?php 
+<?php
 
 namespace $namespace\Form;
 
@@ -519,7 +522,7 @@ EOL;
 
 
     $methodStart = <<<EOL
-    
+
     public function getInputFilter()
     {
         if (!\$this->inputFilter) {
@@ -593,14 +596,14 @@ EOL;
 function mountService($namespace, $className)
 {
     $className .= 'Service';
-    $path = __DIR__ . '/../modules/' . $namespace . '/src/Service';
+    $path = __DIR__ . '/../module/' . $namespace . '/src/Service';
     if (!is_dir($path)) {
         mkdir($path, 0777, true);
     }
     $destination = $path . '/' . $className . '.php';
 
     $serviceContent = <<<EOL
-<?php 
+<?php
 
 namespace $namespace\Service;
 
@@ -616,7 +619,6 @@ class $className extends BaseService
     {
         //TODO implement here
     }
-
 }
 
 EOL;
@@ -634,7 +636,7 @@ function mountController($namespace, $className)
 {
     $baseClass = $className;
     $className .= 'Controller';
-    $path = __DIR__ . '/../modules/' . $namespace . '/src/Controller';
+    $path = __DIR__ . '/../module/' . $namespace . '/src/Controller';
     if (!is_dir($path)) {
         mkdir($path, 0777, true);
     }
@@ -643,7 +645,7 @@ function mountController($namespace, $className)
     $route = getRoute($baseClass);
 
     $serviceContent = <<<EOL
-<?php 
+<?php
 
 namespace $namespace\Controller;
 
@@ -683,7 +685,7 @@ EOL;
 function mountViews($data, $namespace, $className)
 {
     $namespaceRoute = getRoute($namespace);
-    $basePath = __DIR__ . '/../modules/'.$namespace.'/view/' . $namespaceRoute;
+    $basePath = __DIR__ . '/../module/'.$namespace.'/view/' . $namespaceRoute;
     $endPath = getRoute($className);
 
     $destinationPath = $basePath . '/' . $endPath;
@@ -698,12 +700,6 @@ function mountViews($data, $namespace, $className)
     $addDestination = $destinationPath . '/add.twig';
     $editDestination = $destinationPath . '/edit.twig';
     $viewContentDestination = $destinationPath . '/view.twig';
-
-    $scriptDestination = __DIR__ . '/../public/js/modules/' . $namespaceRoute;
-    if (!is_dir($scriptDestination)) {
-        mkdir($scriptDestination, 0755, true);
-    }
-    $scriptDestination .= '/' . $endPath . '.js';
 
     $formContent = <<<EOL
 <form action="" method="post" enctype="application/x-www-form-urlencoded">
@@ -742,7 +738,7 @@ EOL;
     }
 
     $formContent .= <<<EOL
-    
+
     <br clear="all"/>
     <div class="form-group col-lg-2">
         {{ formSubmit(form.get('submit')) }}
@@ -793,9 +789,6 @@ EOL;
     </div>
     <br clear="all"/><br/><br/><br/><br/><br/><br/>
 {% endblock %}
-{%block footer %}
-    <script src="/js/modules/$namespaceRoute/$endPath.js"></script>
-{% endblock %}
 EOL;
 
     file_put_contents($addDestination, $addContent);
@@ -840,9 +833,6 @@ EOL;
         </div>
     </div>
     <br clear="all"/><br/><br/><br/><br/><br/><br/>
-{% endblock %}
-{%block footer %}
-    <script src="/js/modules/$namespaceRoute/$endPath.js"></script>
 {% endblock %}
 EOL;
 
@@ -1092,11 +1082,6 @@ EOL;
 
     file_put_contents($viewContentDestination, $viewContent);
     echo '[X] Gerado view de detalhes' . PHP_EOL;
-
-    if (!file_exists($scriptDestination)) {
-        file_put_contents($scriptDestination, '$(document).ready(function(){});');
-        echo '[X] Gerado script' . PHP_EOL . PHP_EOL;
-    }
 }
 
 /**

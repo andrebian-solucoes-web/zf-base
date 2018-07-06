@@ -2,6 +2,9 @@
 
 namespace User\Form;
 
+use Zend\Form\Element\Email;
+use Zend\Form\Element\Password;
+use Zend\Form\Element\Submit;
 use Zend\Form\Form;
 
 /**
@@ -17,46 +20,46 @@ class Login extends Form
         $this->setAttribute('role', 'form');
         $this->setAttribute('id', 'form_login');
 
-        $this->add(array(
+        $this->add([
             'name' => 'email',
-            'options' => array(
-                'type' => 'Email',
+            'options' => [
+                'type' => Email::class,
                 'label' => 'Email:'
-            ),
-            'attributes' => array(
+            ],
+            'attributes' => [
                 'class' => 'form-control',
                 'id' => 'email',
                 'placeholder' => 'Informe o email',
                 'autocomplete' => 'Off'
-            )
-        ));
+            ]
+        ]);
 
-        $this->add(array(
+        $this->add([
             'name' => 'password',
-            'options' => array(
-                'type' => 'Password',
+            'options' => [
+                'type' => Password::class,
                 'label' => 'Senha:'
-            ),
-            'attributes' => array(
+            ],
+            'attributes' => [
                 'id' => 'password',
                 'placeholder' => 'Entre com a senha',
                 'class' => 'form-control',
-            )
-        ));
+            ]
+        ]);
 
-        $this->add(array(
+        $this->add([
             'name' => 'submit',
-            'type' => 'Zend\Form\Element\Submit',
+            'type' => Submit::class,
             'options' => [
                 'label' => '<i class="entypo-login"></i>Login',
-                'label_options' => array(
+                'label_options' => [
                     'disable_html_escape' => true,
-                ),
+                ],
             ],
-            'attributes' => array(
+            'attributes' => [
                 'value' => 'Login',
                 'class' => 'btn btn-primary btn-block btn-login'
-            )
-        ));
+            ]
+        ]);
     }
 }

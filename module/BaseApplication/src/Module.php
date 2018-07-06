@@ -3,19 +3,12 @@
 namespace BaseApplication;
 
 use BaseApplication\Mail\Mail;
-use BaseApplication\View\Helper\AuthUserViewHelper;
 use BaseApplication\View\Helper\BrazilianStateHelperComboViewHelper;
-use BaseApplication\View\Helper\FormatDateViewHelper;
-use BaseApplication\View\Helper\IsDevModeViewHelper;
 use BaseApplication\View\Helper\JsonDecodeViewHelper;
 use BaseApplication\View\Helper\SlugifyViewHelper;
+use BaseApplication\View\Helper\ZapLoadingViewHelper;
 use Exception;
-use User\Assets\SessionNamespace;
-use Zend\Authentication\AuthenticationService;
-use Zend\Authentication\Storage\Session;
 use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -55,14 +48,10 @@ class Module
     {
         return [
             'invokables' => [
-                'zapLoading' => View\Helper\ZapLoadingViewHelper::class,
-                'isDevMode' => IsDevModeViewHelper::class,
+                'zapLoading' => ZapLoadingViewHelper::class,
                 'jsonDecode' => JsonDecodeViewHelper::class,
-                'formatDate' => FormatDateViewHelper::class,
                 'slugify' => SlugifyViewHelper::class,
-                'brazilianStateCombo' => BrazilianStateHelperComboViewHelper::class,
-                'user' => AuthUserViewHelper::class,
-                'authUser' => AuthUserViewHelper::class,
+                'brazilianStateCombo' => BrazilianStateHelperComboViewHelper::class
             ]
         ];
     }

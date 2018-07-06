@@ -56,7 +56,9 @@ class Module implements DependencyIndicatorInterface
     {
         return [
             'invokables' => [
-                'userIdentity' => UserIdentityViewHelper::class
+                'userIdentity' => UserIdentityViewHelper::class,
+                'user' => UserIdentityViewHelper::class,
+                'authUser' => UserIdentityViewHelper::class,
             ]
         ];
     }
@@ -83,7 +85,7 @@ class Module implements DependencyIndicatorInterface
                 'password-recovery-error'
             ];
 
-            if (!$auth->hasIdentity() && !in_array($matchedRoute, $whitelist)) {
+            if (! $auth->hasIdentity() && ! in_array($matchedRoute, $whitelist)) {
                 return $controller->redirect()->toRoute('login');
             }
 

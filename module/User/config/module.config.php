@@ -2,7 +2,6 @@
 
 namespace User;
 
-use Application\Assets\ORM;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use User\Controller\AuthController;
 use User\Controller\PasswordRecoveryController;
