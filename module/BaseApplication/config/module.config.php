@@ -5,6 +5,7 @@ namespace BaseApplication;
 use BaseApplication\Controller\IndexController;
 use BaseApplication\Controller\SearchController;
 use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 return [
     'router' => [
@@ -13,6 +14,16 @@ return [
                 'type' => Literal::class,
                 'options' => [
                     'route' => '/',
+                    'defaults' => [
+                        'controller' => IndexController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'default' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/index/:action[/:id]',
                     'defaults' => [
                         'controller' => IndexController::class,
                         'action' => 'index',

@@ -20,6 +20,9 @@ class Login extends Form
         $this->setAttribute('role', 'form');
         $this->setAttribute('id', 'form_login');
 
+        $filter = new LoginFormFilter();
+        $this->setInputFilter($filter->getInputFilter());
+
         $this->add([
             'name' => 'email',
             'options' => [

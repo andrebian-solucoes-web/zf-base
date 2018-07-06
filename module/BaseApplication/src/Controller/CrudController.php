@@ -182,7 +182,7 @@ abstract class CrudController extends BaseController
                     return $this->redirect()->{$this->redirectMethod}($this->redirectTo);
                 }
             } else {
-                $errorMessages = $this->form->getMessages();
+                $errorMessages = $form->getMessages();
             }
         }
 

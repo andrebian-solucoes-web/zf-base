@@ -42,11 +42,11 @@ class LoginTest extends TestCase
 
     public function formFields()
     {
-        return array(
-            array('email'),
-            array('password'),
-            array('submit'),
-        );
+        return [
+            ['email'],
+            ['password'],
+            ['submit'],
+        ];
     }
 
     public function getFormAttributes()
@@ -106,6 +106,9 @@ class LoginTest extends TestCase
     public function completeDataAreValid()
     {
         $this->form->setData($this->getData());
-        $this->assertTrue($this->form->isValid());
+        $isvalid = $this->form->isValid();
+
+        $errorMessages = $this->form->getMessages();
+        $this->assertTrue($isvalid);
     }
 }
