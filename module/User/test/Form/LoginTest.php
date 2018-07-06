@@ -106,9 +106,6 @@ class LoginTest extends TestCase
     public function completeDataAreValid()
     {
         $this->form->setData($this->getData());
-        $isvalid = $this->form->isValid();
-
-        $errorMessages = $this->form->getMessages();
-        $this->assertTrue($isvalid);
+        $this->assertTrue($this->form->isValid());
     }
 }
