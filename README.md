@@ -68,7 +68,6 @@ An e-mail wrapper. Easily send transactional e-mails.
 
 #### View Helpers
 
-- AuthUser - Fetch logged user in session
 - BrazilianStateHelper - Easily populate forms with Brazilian States
 - JsonDecode - Decode json data in views. Useful for twig templates
 - Slugify - Generates slugs by a given string
