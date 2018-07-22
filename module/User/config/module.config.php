@@ -8,6 +8,11 @@ use User\Controller\PasswordRecoveryController;
 use Zend\I18n\Translator\TranslatorServiceFactory;
 use Zend\Router\Http\Literal;
 
+$ormCacheEngine = 'array';
+if (defined('ORM_CACHE_ENGINE')) {
+    $ormCacheEngine = ORM_CACHE_ENGINE;
+}
+
 return [
     'router' => [
         'routes' => [
@@ -81,7 +86,7 @@ return [
         'driver' => [
             __NAMESPACE__ . '_driver' => [
                 'class' => AnnotationDriver::class,
-                'cache' => ORM_CACHE_ENGINE,
+                'cache' => $ormCacheEngine,
                 'paths' => [dirname(__DIR__) . '/src/Entity']
             ],
             'orm_default' => [
