@@ -7,36 +7,52 @@
     <div class="col-md-12 text-center">
         {% include 'partials/flash-messages.twig' %}
     </div>
-    <div class="table-wrapper">
-        <div class="table-row">
-            <div class="table-cell text-center">
-                <div class="login i-block">
-                    <div class="content-box">
-                        <div class="biggest-box">
-                            <img src="/img/logo.png" alt="Logo Application">
-                        </div>
-                        <div class="big-box text-left login-form">
-                            <h2 class="zero-m text-uppercase text-center">Login</h2>
-                            <form role="form" method="post" enctype="application/x-www-form-urlencoded">
-                                <div class="form-group">
-                                    <input id="email" type="email" name="email" class="form-control material"
-                                           placeholder="Email">
-                                </div>
-                                <div class="form-group">
-                                    <input type="password" name="password" class="form-control material" id="password"
-                                           placeholder="Senha">
-                                </div>
 
-                                <button type="submit" class="btn btn-block btn-info text-uppercase waves">Login</button>
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="{{ url('admin-login') }}"><b>Admin</b>LTE</a>
+        </div>
+        <div class="login-box-body">
+            <p class="login-box-msg">Realize login para acessar o painel</p>
 
-                            </form>
-                            <a class="d-block small mt-3" href="{{ url('admin-password-recovery') }}">Esqueci minha
-                                senha</a>
-                        </div>
+            <form action="{{ url('admin-login') }}" method="post" enctype="application/x-www-form-urlencoded">
+                <div class="form-group has-feedback">
+                    <input id="email" type="email" name="email" class="form-control material"
+                           placeholder="Email">
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                    {% if errorMessages.email is defined %}
+                        <br />
+                        {% for error in errorMessages.email %}
+                            {{ error }}<br />
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="password" name="password" class="form-control material" id="password"
+                           placeholder="Senha">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                    {% if errorMessages.password is defined %}
+                        <br />
+                        {% for error in errorMessages.password %}
+                            {{ error }}<br />
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
                     </div>
                 </div>
-            </div>
+                {% if errorMessages.invalidLogin is defined %}
+                    <br />
+                    <div class="alert alert-danger">
+                        {{ errorMessages.invalidLogin }}
+                    </div>
+                {% endif %}
+            </form>
+            <a href="{{ url('admin-password-recovery') }}">Esqueci minha senha</a><br>
         </div>
     </div>
+
 {% endblock %}
 
