@@ -1,0 +1,16 @@
+{% extends "layout/layout.twig" %}
+
+{% block page_title %}{{ translate('Home') }} - {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">{{ translate('Home') }}</h1>
+        </div>
+    </div>
+    <div class="row">
+        {% include 'partials/flash-messages.twig' %}
+        Welcome to <strong>Admin</strong> of the Andrebian's ZF Base project. Your project is ready to work. From now you have a set
+        of several tools and features.
+    </div>
+{% endblock %}

@@ -82,11 +82,20 @@ class Module implements DependencyIndicatorInterface
                 'login',
                 'password-recovery',
                 'recovery-password-action',
-                'password-recovery-error'
+                'password-recovery-error',
+                'admin-login',
+                'admin-password-recovery',
+                'admin-recovery-password-action',
+                'admin-password-recovery-error'
             ];
 
+            $redirect = 'login';
+            if (strpos($matchedRoute, 'admin-') !== false) {
+                $redirect = 'admin-login';
+            }
+
             if (! $auth->hasIdentity() && ! in_array($matchedRoute, $whitelist)) {
-                return $controller->redirect()->toRoute('login');
+                return $controller->redirect()->toRoute($redirect);
             }
 
         }, 100);

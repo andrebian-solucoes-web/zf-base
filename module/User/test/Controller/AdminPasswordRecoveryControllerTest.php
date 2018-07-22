@@ -10,7 +10,7 @@ namespace Test\User\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Mockery;
-use User\Controller\PasswordRecoveryController;
+use User\Controller\AdminPasswordRecoveryController;
 use User\Entity\PasswordRecoveryToken;
 use User\Entity\User;
 use User\Service\PasswordRecoveryService;
@@ -18,13 +18,13 @@ use Zend\Stdlib\ArrayUtils;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
 /**
- * Class PasswordRecoveryControllerTest
+ * Class AdminPasswordRecoveryControllerTest
  * @package Test\User\Controller
  *
  * @group User
  * @group Controller
  */
-class PasswordRecoveryControllerTest extends AbstractHttpControllerTestCase
+class AdminPasswordRecoveryControllerTest extends AbstractHttpControllerTestCase
 {
     public function setUp()
     {
@@ -69,20 +69,20 @@ class PasswordRecoveryControllerTest extends AbstractHttpControllerTestCase
 
     public function testIndexActionGet()
     {
-        $this->dispatch('/password-recovery', 'GET');
+        $this->dispatch('/admin/user/password-recovery', 'GET');
         $this->assertResponseStatusCode(200);
         $this->assertModuleName('User');
-        $this->assertControllerName(PasswordRecoveryController::class);
-        $this->assertMatchedRouteName('password-recovery');
+        $this->assertControllerName(AdminPasswordRecoveryController::class);
+        $this->assertMatchedRouteName('admin-password-recovery');
     }
 
     public function testIndexActionPost()
     {
-        $this->dispatch('/password-recovery', 'POST', ['email' => 'test@test.com']);
+        $this->dispatch('/admin/user/password-recovery', 'POST', ['email' => 'test@test.com']);
         $this->assertResponseStatusCode(302);
         $this->assertModuleName('User');
-        $this->assertControllerName(PasswordRecoveryController::class);
-        $this->assertMatchedRouteName('password-recovery');
+        $this->assertControllerName(AdminPasswordRecoveryController::class);
+        $this->assertMatchedRouteName('admin-password-recovery');
     }
 
     public function testRecoverPasswordActionGetInvalidEmail()
@@ -101,11 +101,11 @@ class PasswordRecoveryControllerTest extends AbstractHttpControllerTestCase
         $serviceManager->setAllowOverride(true);
         $serviceManager->setService(EntityManager::class, $entityManager);
 
-        $this->dispatch('/recovery-password-action?email=test@test.com&token=12345', 'GET');
+        $this->dispatch('/admin/user/recovery-password-action?email=test@test.com&token=12345', 'GET');
         $this->assertResponseStatusCode(302);
         $this->assertModuleName('User');
-        $this->assertControllerName(PasswordRecoveryController::class);
-        $this->assertMatchedRouteName('recovery-password-action');
+        $this->assertControllerName(AdminPasswordRecoveryController::class);
+        $this->assertMatchedRouteName('admin-recovery-password-action');
     }
 
     public function testRecoverPasswordActionGetInvalidToken()
@@ -122,43 +122,43 @@ class PasswordRecoveryControllerTest extends AbstractHttpControllerTestCase
 
         $serviceManager->setService(EntityManager::class, $entityManager);
 
-        $this->dispatch('/recovery-password-action?email=test@test.com&token=12345', 'GET');
+        $this->dispatch('/admin/user/recovery-password-action?email=test@test.com&token=12345', 'GET');
         $this->assertResponseStatusCode(302);
         $this->assertModuleName('User');
-        $this->assertControllerName(PasswordRecoveryController::class);
-        $this->assertMatchedRouteName('recovery-password-action');
+        $this->assertControllerName(AdminPasswordRecoveryController::class);
+        $this->assertMatchedRouteName('admin-recovery-password-action');
     }
 
     public function testRecoverPasswordActionPostWithoutAllParams()
     {
-        $this->dispatch('/recovery-password-action?email=test@test.com&token=12345', 'POST', [
+        $this->dispatch('/admin/user/recovery-password-action?email=test@test.com&token=12345', 'POST', [
             'password' => '123467'
         ]);
         $this->assertResponseStatusCode(302);
         $this->assertModuleName('User');
-        $this->assertControllerName(PasswordRecoveryController::class);
-        $this->assertMatchedRouteName('recovery-password-action');
+        $this->assertControllerName(AdminPasswordRecoveryController::class);
+        $this->assertMatchedRouteName('admin-recovery-password-action');
     }
 
     public function testRecoverPasswordActionPost()
     {
-        $this->dispatch('/recovery-password-action?email=test@test.com&token=12345', 'POST', [
+        $this->dispatch('/admin/user/recovery-password-action?email=test@test.com&token=12345', 'POST', [
             'password' => '123467',
             'password-confirmation' => '123467'
         ]);
 
         $this->assertResponseStatusCode(302);
         $this->assertModuleName('User');
-        $this->assertControllerName(PasswordRecoveryController::class);
-        $this->assertMatchedRouteName('recovery-password-action');
+        $this->assertControllerName(AdminPasswordRecoveryController::class);
+        $this->assertMatchedRouteName('admin-recovery-password-action');
     }
 
     public function testErrorAction()
     {
-        $this->dispatch('/password-recovery-error', 'GET');
+        $this->dispatch('/admin/user/password-recovery-error', 'GET');
         $this->assertResponseStatusCode(200);
         $this->assertModuleName('User');
-        $this->assertControllerName(PasswordRecoveryController::class);
-        $this->assertMatchedRouteName('password-recovery-error');
+        $this->assertControllerName(AdminPasswordRecoveryController::class);
+        $this->assertMatchedRouteName('admin-password-recovery-error');
     }
 }

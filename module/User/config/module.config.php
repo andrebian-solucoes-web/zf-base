@@ -3,6 +3,8 @@
 namespace User;
 
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use User\Controller\AdminAuthController;
+use User\Controller\AdminPasswordRecoveryController;
 use User\Controller\AuthController;
 use User\Controller\PasswordRecoveryController;
 use Zend\I18n\Translator\TranslatorServiceFactory;
@@ -16,52 +18,52 @@ if (defined('ORM_CACHE_ENGINE')) {
 return [
     'router' => [
         'routes' => [
-            'login' => [
+            'admin-login' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => '/login',
+                    'route' => '/admin/login',
                     'defaults' => [
-                        'controller' => AuthController::class,
+                        'controller' => AdminAuthController::class,
                         'action' => 'index',
                     ],
                 ],
             ],
-            'logout' => [
+            'admin-logout' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => '/logout',
+                    'route' => '/admin/logout',
                     'defaults' => [
-                        'controller' => AuthController::class,
+                        'controller' => AdminAuthController::class,
                         'action' => 'logout',
                     ],
                 ],
             ],
-            'password-recovery' => [
+            'admin-password-recovery' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => '/password-recovery',
+                    'route' => '/admin/user/password-recovery',
                     'defaults' => [
-                        'controller' => PasswordRecoveryController::class,
+                        'controller' => AdminPasswordRecoveryController::class,
                         'action' => 'index',
                     ],
                 ],
             ],
-            'recovery-password-action' => [
+            'admin-recovery-password-action' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => '/recovery-password-action',
+                    'route' => '/admin/user/recovery-password-action',
                     'defaults' => [
-                        'controller' => PasswordRecoveryController::class,
+                        'controller' => AdminPasswordRecoveryController::class,
                         'action' => 'recoverPassword',
                     ],
                 ],
             ],
-            'password-recovery-error' => [
+            'admin-password-recovery-error' => [
                 'type' => Literal::class,
                 'options' => [
-                    'route' => '/password-recovery-error',
+                    'route' => '/admin/user/password-recovery-error',
                     'defaults' => [
-                        'controller' => PasswordRecoveryController::class,
+                        'controller' => AdminPasswordRecoveryController::class,
                         'action' => 'error',
                     ],
                 ],
@@ -71,7 +73,9 @@ return [
     'controllers' => [
         'invokables' => [
             AuthController::class => AuthController::class,
-            PasswordRecoveryController::class => PasswordRecoveryController::class
+            PasswordRecoveryController::class => PasswordRecoveryController::class,
+            AdminAuthController::class => AdminAuthController::class,
+            AdminPasswordRecoveryController::class => AdminPasswordRecoveryController::class
         ],
     ],
     'view_manager' => [

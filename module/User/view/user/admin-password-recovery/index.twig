@@ -1,0 +1,37 @@
+{% extends "layout/layout-admin-login.twig" %}
+
+{% block page_title %}Recuperação de senha - {% endblock %}
+
+{% block content %}
+
+    <div class="table-wrapper">
+        <div class="table-row">
+            <div class="table-cell text-center">
+                <div class="login i-block">
+                    <div class="content-box">
+                        <div class="biggest-box">
+                            <img src="/img/logo.png" alt="Logo Application">
+                        </div>
+                        <div class="big-box text-left login-form">
+                            <h2 class="zero-m text-uppercase text-center">Recuperação de senha</h2>
+                            <br>
+                            <form role="form" method="post" enctype="application/x-www-form-urlencoded">
+                                <div class="form-group">
+                                    <input type="email" name="email" class="form-control material"
+                                           placeholder="Informe seu e-mail">
+                                </div>
+
+                                <button type="submit" class="btn btn-block btn-info text-uppercase waves">Recuperar
+                                    senha
+                                </button>
+
+                            </form>
+                            <a href="{{ url('admin-login') }}">Return</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
