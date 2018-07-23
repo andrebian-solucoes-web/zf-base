@@ -2,6 +2,7 @@
 
 namespace BaseApplication;
 
+use BaseApplication\Controller\AdminIndexController;
 use BaseApplication\Controller\IndexController;
 use BaseApplication\Controller\SearchController;
 use Zend\Router\Http\Literal;
@@ -16,6 +17,16 @@ return [
                     'route' => '/',
                     'defaults' => [
                         'controller' => IndexController::class,
+                        'action' => 'index',
+                    ],
+                ],
+            ],
+            'admin' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route' => '/admin',
+                    'defaults' => [
+                        'controller' => AdminIndexController::class,
                         'action' => 'index',
                     ],
                 ],
@@ -45,7 +56,8 @@ return [
     'controllers' => [
         'invokables' => [
             IndexController::class => IndexController::class,
-            SearchController::class => SearchController::class
+            SearchController::class => SearchController::class,
+            AdminIndexController::class => AdminIndexController::class
         ]
     ],
     'view_manager' => [

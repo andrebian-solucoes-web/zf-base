@@ -8,7 +8,12 @@ use BaseApplication\View\Helper\JsonDecodeViewHelper;
 use BaseApplication\View\Helper\SlugifyViewHelper;
 use BaseApplication\View\Helper\ZapLoadingViewHelper;
 use Exception;
+use User\Assets\SessionNamespace;
+use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\Storage\Session;
 use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -61,20 +66,25 @@ class Module
      */
     public function init(ModuleManager $moduleManager)
     {
-        // Uncomment this if you need that all actions for this module were authenticated
-//        $sharedEvents = $moduleManager->getEventManager()->getSharedManager();
-//        $sharedEvents->attach(__NAMESPACE__, MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) {
-//
-//            $auth = new AuthenticationService();
-//            $auth->setStorage(new Session(SessionNamespace::NAME));
-//
-//            /** @var AbstractActionController $controller */
-//            $controller = $event->getTarget();
-//
-//            if (!$auth->hasIdentity()) {
-//                return $controller->redirect()->toRoute('login');
-//            }
-//
-//        }, 100);
+        $sharedEvents = $moduleManager->getEventManager()->getSharedManager();
+        $sharedEvents->attach(__NAMESPACE__, MvcEvent::EVENT_DISPATCH, function (MvcEvent $event) {
+
+            $auth = new AuthenticationService();
+            $auth->setStorage(new Session(SessionNamespace::NAME));
+
+            /** @var AbstractActionController $controller */
+            $controller = $event->getTarget();
+            $matchedRoute = $controller->getEvent()->getRouteMatch()->getMatchedRouteName();
+
+            $redirect = 'login';
+            if (strpos($matchedRoute, 'admin') !== false) {
+                $redirect = 'admin-login';
+            }
+
+            if (!$auth->hasIdentity() && $matchedRoute == 'admin') {
+                return $controller->redirect()->toRoute($redirect);
+            }
+
+        }, 100);
     }
 }
