@@ -55,7 +55,7 @@ class AdminAuthController extends BaseController
                     return $this->redirect()->toRoute('admin');
                 } else {
                     unset($data['password']);
-                    $errorMessages = 'E-mail e/ou senha inválidos';
+                    $errorMessages['invalidLogin'] = 'E-mail e/ou senha inválidos';
                 }
             } else {
                 $errorMessages = $form->getMessages();

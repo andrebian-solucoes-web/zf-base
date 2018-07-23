@@ -101,6 +101,7 @@ class Adapter implements AdapterInterface
                 'avatar' => $user->getAvatar(),
                 'name' => $user->getName(),
                 'last_login' => time(),
+                'previous_last_login' => $user->getLastLogin()
             ];
 
             $resultCode = Result::SUCCESS;

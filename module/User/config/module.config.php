@@ -69,7 +69,6 @@ return [
                 ],
             ],
 
-
             // public area
             'login' => [
                 'type' => Literal::class,

@@ -20,7 +20,9 @@
                             <img src="/img/admin/user2-160x160.jpg" class="img-circle" alt="User Image">
                             <p>
                                 Admin
-                                <small>Último login: hoje</small>
+                                <small>{{ translate('Last login') }}:
+                                    {{ userIdentity().previous_last_login.format('d/m/Y H:i') }}
+                                </small>
                             </p>
                         </li>
                         <li class="user-footer">
