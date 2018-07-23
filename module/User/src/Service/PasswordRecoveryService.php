@@ -60,7 +60,7 @@ class PasswordRecoveryService
 
             $data = [
                 'name' => $user->getName(),
-                'recoveryLink' => '/recovery-password-action?email=' . $email . '&token=' . $token
+                'recoveryLink' => '/admin/user/recovery-password-action?email=' . $email . '&token=' . $token
             ];
 
             $config = $this->serviceManager->get('config');

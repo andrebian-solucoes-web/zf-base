@@ -29,7 +29,15 @@
         {% block inline_style %}{% endblock %}
     </head>
     <body class="hold-transition login-page">
-        {% block content %}{% endblock %}
+        <div class="col-md-12 text-center">
+            {% include 'partials/flash-messages.twig' %}
+        </div>
+        <div class="login-box">
+            <div class="login-logo">
+                <a href="{{ url('admin-login') }}"><b>Admin</b>LTE</a>
+            </div>
+            {% block content %}{% endblock %}
+        </div>
     </body>
 </html>
 {% block footer %}{% endblock %}

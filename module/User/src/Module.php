@@ -41,9 +41,7 @@ class Module implements DependencyIndicatorInterface
                     return new Adapter($entityManager);
                 },
                 UserService::class => function (ServiceManager $serviceManager) {
-                    $entityManager = $serviceManager->get(EntityManager::class);
-
-                    return new UserService($entityManager);
+                    return new UserService($serviceManager);
                 },
                 PasswordRecoveryService::class => function (ServiceManager $serviceManager) {
                     return new PasswordRecoveryService($serviceManager);
