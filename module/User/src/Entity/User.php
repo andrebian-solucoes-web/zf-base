@@ -145,7 +145,9 @@ class User extends AbstractApplicationEntity
      */
     public function setAvatar($avatar)
     {
-        $this->avatar = $avatar;
+        if (strlen($avatar) > 5) {
+            $this->avatar = $avatar;
+        }
 
         return $this;
     }
