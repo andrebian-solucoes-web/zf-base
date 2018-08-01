@@ -5,10 +5,12 @@ namespace User;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use User\Controller\AdminAuthController;
 use User\Controller\AdminPasswordRecoveryController;
+use User\Controller\AdminUserController;
 use User\Controller\AuthController;
 use User\Controller\PasswordRecoveryController;
 use Zend\I18n\Translator\TranslatorServiceFactory;
 use Zend\Router\Http\Literal;
+use Zend\Router\Http\Segment;
 
 $ormCacheEngine = 'array';
 if (defined('ORM_CACHE_ENGINE')) {
@@ -35,6 +37,16 @@ return [
                     'defaults' => [
                         'controller' => AdminAuthController::class,
                         'action' => 'logout',
+                    ],
+                ],
+            ],
+            'admin-user' => [
+                'type' => Segment::class,
+                'options' => [
+                    'route' => '/admin/user/:action[/:id]',
+                    'defaults' => [
+                        'controller' => AdminUserController::class,
+                        'action' => 'index',
                     ],
                 ],
             ],
@@ -127,7 +139,8 @@ return [
             AuthController::class => AuthController::class,
             PasswordRecoveryController::class => PasswordRecoveryController::class,
             AdminAuthController::class => AdminAuthController::class,
-            AdminPasswordRecoveryController::class => AdminPasswordRecoveryController::class
+            AdminPasswordRecoveryController::class => AdminPasswordRecoveryController::class,
+            AdminUserController::class => AdminUserController::class
         ],
     ],
     'view_manager' => [

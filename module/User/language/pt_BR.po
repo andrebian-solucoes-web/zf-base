@@ -4,3 +4,45 @@ msgstr "As senhas não coincidem."
 msgid "Password recovery"
 msgstr "Recuperação de senha"
 
+msgid "User Profile"
+msgstr "Perfil de usuário"
+
+msgid "Last login"
+msgstr "Último login"
+
+msgid "Details"
+msgstr "Detalhes"
+
+msgid "Fill just if you want to change your password"
+msgstr "Preencha somente se quiser alterar sua senha"
+
+msgid "Change password"
+msgstr "Alterar senha"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Password"
+msgstr "Senha"
+
+msgid "New"
+msgstr "Nova"
+
+msgid "Profile edited"
+msgstr "Perfil editado"
+
+msgid "Profile not edited"
+msgstr "Perfil não editado"
+
+msgid "Set your avatar"
+msgstr "Defina sua imagem de perfil"
+
+msgid "Avatar"
+msgstr "Imagem de perfil"
+
+msgid "Sign out"
+msgstr "Sair"
+
+msgid "Logout"
+msgstr "Sair"
+

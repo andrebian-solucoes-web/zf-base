@@ -28,4 +28,28 @@ class UserService extends BaseService
 
         return true;
     }
+
+    public function uploadAvatar($avatar, $id)
+    {
+        return $this->uploadFile($avatar, 'avatar/' . $id);
+    }
+
+    /**
+     * @param $file
+     * @param $pathName
+     * @return string
+     */
+    private function uploadFile($file, $pathName)
+    {
+        $path = __DIR__ . '/../../../../public/files/' . $pathName;
+        if (! is_dir($path)) {
+            mkdir($path, 0755, true);
+        }
+
+        if (move_uploaded_file($file['tmp_name'], $path . '/' . $file['name'])) {
+            return $file['name'];
+        }
+
+        return '';
+    }
 }

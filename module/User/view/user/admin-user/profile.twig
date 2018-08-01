@@ -1,0 +1,98 @@
+{% extends 'layout/admin.twig' %}
+
+{% block content %}
+    <div class="content-wrapper">
+
+        {% include 'partials/admin/flash-messages.twig' %}
+
+        <section class="content-header">
+            <h1>
+                {{ translate('User Profile') }}
+            </h1>
+            <ol class="breadcrumb">
+                <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="active">{{ translate('User Profile') }}</li>
+            </ol>
+        </section>
+
+        <section class="content">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="box box-primary">
+                        <div class="box-body box-profile">
+                            <img class="profile-user-img img-responsive img-circle"
+                                 src="/files/avatar/{{ user.id }}/{{ user.avatar }}" alt="User profile picture">
+                            <h3 class="profile-username text-center">{{ userIdentity().name }}</h3>
+                            <ul class="list-group list-group-unbordered">
+                                <li class="list-group-item">
+                                    <b>{{ translate('Last login') }}</b>
+                                    <a class="pull-right">
+                                        {{ userIdentity().previous_last_login.format('d/m/Y H:i') }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#settings" data-toggle="tab">
+                                    {{ translate('Details') }}
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="active tab-pane" id="settings">
+                                <form class="form-horizontal" method="post" enctype="multipart/form-data"
+                                      autocomplete="off">
+                                    {{ formHidden(form.get('id')) }}
+                                    <div class="form-group">
+                                        <label for="inputName"
+                                               class="col-sm-2 control-label">{{ translate(form.get('name').label) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ formElement(form.get('name')) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputName"
+                                               class="col-sm-2 control-label">{{ form.get('username').label }}</label>
+                                        <div class="col-sm-10">
+                                            {{ formElement(form.get('username')) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputName"
+                                               class="col-sm-2 control-label">{{ translate(form.get('avatar').label) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ formFile(form.get('avatar')) }}
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-10 col-md-offset-2">
+                                            <a href="#" onclick="$('.new-password').toggleClass('hidden'); return false;">{{ translate('Change password') }}</a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group new-password hidden">
+                                        <label for="inputName"
+                                               class="col-sm-2 control-label">{{ translate('New') }} {{ translate(form.get('password').label) }}</label>
+                                        <div class="col-sm-10">
+                                            {{ formPassword(form.get('password')) }}
+                                            <small>{{ translate('Fill just if you want to change your password') }}</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-2 col-sm-10">
+                                            {{ formSubmit(form.get('submit')) }}
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
