@@ -13,6 +13,7 @@ return [
         'routes' => [
             'home' => [
                 'type' => Literal::class,
+                'public' => true,
                 'options' => [
                     'route' => '/',
                     'defaults' => [
@@ -23,6 +24,7 @@ return [
             ],
             'admin' => [
                 'type' => Literal::class,
+                'public' => false,
                 'options' => [
                     'route' => '/admin',
                     'defaults' => [
@@ -32,6 +34,7 @@ return [
                 ],
             ],
             'default' => [
+                'public' => true,
                 'type' => Segment::class,
                 'options' => [
                     'route' => '/index/:action[/:id]',
@@ -42,6 +45,7 @@ return [
                 ],
             ],
             'search' => [
+                'public' => true,
                 'type' => Literal::class,
                 'options' => [
                     'route' => '/search',

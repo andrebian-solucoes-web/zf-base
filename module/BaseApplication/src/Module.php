@@ -3,6 +3,7 @@
 namespace BaseApplication;
 
 use BaseApplication\Mail\Mail;
+use BaseApplication\Route\PublicRoutes;
 use BaseApplication\View\Helper\AuthUserViewHelper;
 use BaseApplication\View\Helper\BrazilianStateHelperComboViewHelper;
 use BaseApplication\View\Helper\CPFMaskViewHelper;
@@ -12,7 +13,12 @@ use BaseApplication\View\Helper\PhpVersionViewHelper;
 use BaseApplication\View\Helper\ProductionEnvViewHelper;
 use BaseApplication\View\Helper\SlugifyViewHelper;
 use Exception;
+use User\Assets\SessionNamespace;
+use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\Storage\Session;
 use Zend\ModuleManager\ModuleManager;
+use Zend\Mvc\Controller\AbstractActionController;
+use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -80,10 +86,24 @@ class Module
 //
 //            /** @var AbstractActionController $controller */
 //            $controller = $event->getTarget();
+//            $matchedRoute = $controller->getEvent()->getRouteMatch()->getMatchedRouteName();
 //
-//            if (!$auth->hasIdentity()) {
+//            $config = __DIR__ . '/../config/module.config.php';
+//            $publicRoutes = new PublicRoutes();
+//            $whitelist = $publicRoutes->getPublicRoutes($config);
+//
+//            /** @var AbstractActionController $controller */
+//            $controller = $event->getTarget();
+//
+//            if (! $auth->hasIdentity()) {
 //                return $controller->redirect()->toRoute('login');
 //            }
+//
+//            // if you want to bypass for public routes, comment the 3 lines above and uncomment
+//            // the following lines
+////            if (! $auth->hasIdentity() && ! in_array($matchedRoute, $whitelist)) {
+////                return $controller->redirect()->toRoute('login');
+////            }
 //
 //        }, 100);
     }

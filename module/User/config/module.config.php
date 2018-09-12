@@ -22,6 +22,7 @@ return [
         'routes' => [
             'admin-login' => [
                 'type' => Literal::class,
+                'public' => true,
                 'options' => [
                     'route' => '/admin/login',
                     'defaults' => [
@@ -32,6 +33,7 @@ return [
             ],
             'admin-logout' => [
                 'type' => Literal::class,
+                'public' => true,
                 'options' => [
                     'route' => '/admin/logout',
                     'defaults' => [
@@ -42,6 +44,7 @@ return [
             ],
             'admin-user' => [
                 'type' => Segment::class,
+                'public' => false,
                 'options' => [
                     'route' => '/admin/user/:action[/:id]',
                     'defaults' => [
@@ -52,6 +55,7 @@ return [
             ],
             'admin-password-recovery' => [
                 'type' => Literal::class,
+                'public' => true,
                 'options' => [
                     'route' => '/admin/user/password-recovery',
                     'defaults' => [
@@ -62,6 +66,7 @@ return [
             ],
             'admin-recovery-password-action' => [
                 'type' => Literal::class,
+                'public' => true,
                 'options' => [
                     'route' => '/admin/user/recovery-password-action',
                     'defaults' => [
@@ -72,6 +77,7 @@ return [
             ],
             'admin-password-recovery-error' => [
                 'type' => Literal::class,
+                'public' => true,
                 'options' => [
                     'route' => '/admin/user/password-recovery-error',
                     'defaults' => [
@@ -84,6 +90,7 @@ return [
             // public area
             'login' => [
                 'type' => Literal::class,
+                'public' => true,
                 'options' => [
                     'route' => '/login',
                     'defaults' => [
@@ -94,6 +101,7 @@ return [
             ],
             'logout' => [
                 'type' => Literal::class,
+                'public' => true,
                 'options' => [
                     'route' => '/logout',
                     'defaults' => [
@@ -104,6 +112,7 @@ return [
             ],
             'password-recovery' => [
                 'type' => Literal::class,
+                'public' => true,
                 'options' => [
                     'route' => '/password-recovery',
                     'defaults' => [
@@ -114,6 +123,7 @@ return [
             ],
             'recovery-password-action' => [
                 'type' => Literal::class,
+                'public' => true,
                 'options' => [
                     'route' => '/recovery-password-action',
                     'defaults' => [
@@ -124,6 +134,7 @@ return [
             ],
             'password-recovery-error' => [
                 'type' => Literal::class,
+                'public' => true,
                 'options' => [
                     'route' => '/password-recovery-error',
                     'defaults' => [
