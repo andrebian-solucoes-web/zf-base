@@ -3,13 +3,13 @@
 namespace Test\BaseApplication\View\Helper;
 
 use BaseApplication\View\Helper\JsonDecodeViewHelper;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class JsonDecodeViewHelperTest
  * @package Test\BaseApplication\View\Helper
  */
-class JsonDecodeViewHelperTest extends PHPUnit_Framework_TestCase
+class JsonDecodeViewHelperTest extends TestCase
 {
     /**
      * @test

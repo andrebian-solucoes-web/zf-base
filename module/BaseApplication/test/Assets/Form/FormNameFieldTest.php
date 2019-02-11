@@ -3,13 +3,13 @@
 namespace Test\BaseApplication\Assets\Form;
 
 use BaseApplication\Assets\Form\FormNameField;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class FormNameFieldTest
  * @package Test\BaseApplication\Assets\Form
  */
-class FormNameFieldTest extends PHPUnit_Framework_TestCase
+class FormNameFieldTest extends TestCase
 {
     /**
      * @test

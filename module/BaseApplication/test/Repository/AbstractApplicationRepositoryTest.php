@@ -2,22 +2,19 @@
 
 namespace Test\BaseApplication\Repository;
 
-use BaseApplication\Repository\AbstractApplicationRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\ORM\Query;
 use Mockery;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use User\Entity\Role;
 use User\Entity\User;
 use User\Repository\UserRepository;
-use User\Service\UserService;
 
 /**
  * Class AbstractApplicationRepositoryTest
  * @package Test\BaseApplication\Repository
  */
-class AbstractApplicationRepositoryTest extends PHPUnit_Framework_TestCase
+class AbstractApplicationRepositoryTest extends TestCase
 {
     /**
      * @test

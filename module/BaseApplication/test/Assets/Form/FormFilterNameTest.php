@@ -3,13 +3,13 @@
 namespace Test\BaseApplication\Assets\Form;
 
 use BaseApplication\Assets\Form\FormFilterName;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class FormFilterNameTest
  * @package Test\BaseApplication\Assets\Form
  */
-class FormFilterNameTest extends PHPUnit_Framework_TestCase
+class FormFilterNameTest extends TestCase
 {
     /**
      * @test

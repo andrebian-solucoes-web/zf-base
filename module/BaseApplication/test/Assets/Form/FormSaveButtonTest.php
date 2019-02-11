@@ -3,13 +3,13 @@
 namespace Test\BaseApplication\Assets\Form;
 
 use BaseApplication\Assets\Form\FormSaveButton;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class FormSaveButtonTest
  * @package Test\BaseApplication\Assets\Form
  */
-class FormSaveButtonTest extends PHPUnit_Framework_TestCase
+class FormSaveButtonTest extends TestCase
 {
     /**
      * @test

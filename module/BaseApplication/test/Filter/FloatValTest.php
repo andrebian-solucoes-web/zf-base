@@ -4,13 +4,13 @@ namespace Test\BaseApplication\Filter;
 
 use BaseApplication\Filter\FloatVal;
 use DateTime;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class FloatValTest
  * @package Test\BaseApplication\Filter
  */
-class FloatValTest extends PHPUnit_Framework_TestCase
+class FloatValTest extends TestCase
 {
     /**
      * @test

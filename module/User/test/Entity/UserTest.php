@@ -4,7 +4,7 @@ namespace Tests\Unit\User\Entity;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use User\Entity\PasswordRecoveryToken;
 use User\Entity\Role;
 use User\Entity\User;
@@ -16,7 +16,7 @@ use User\Entity\User;
  * @group User
  * @group Entity
  */
-class UserTest extends PHPUnit_Framework_TestCase
+class UserTest extends TestCase
 {
     /**
      * @test
@@ -31,7 +31,7 @@ class UserTest extends PHPUnit_Framework_TestCase
         $entity->setName('1');
         $entity->setPassword('11231321');
         $entity->setLastLogin(new DateTime());
-        $entity->setAvatar('1');
+        $entity->setAvatar('12345.jpg');
         $entity->setUsername('1');
         $entity->setId('1');
         $entity->setCreated(new DateTime());

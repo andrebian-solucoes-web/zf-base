@@ -3,13 +3,13 @@
 namespace Test\BaseApplication\Helper;
 
 use BaseApplication\Helper\PhoneFormatter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class PhoneFormatterTest
  * @package Test\BaseApplication\Helper
  */
-class PhoneFormatterTest extends PHPUnit_Framework_TestCase
+class PhoneFormatterTest extends TestCase
 {
     /**
      * @test

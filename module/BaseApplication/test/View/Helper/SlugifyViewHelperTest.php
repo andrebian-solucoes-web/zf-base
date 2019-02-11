@@ -3,13 +3,13 @@
 namespace Test\BaseApplication\View\Helper;
 
 use BaseApplication\View\Helper\SlugifyViewHelper;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class SlugifyViewHelperTest
  * @package Test\BaseApplication\View\Helper
  */
-class SlugifyViewHelperTest extends PHPUnit_Framework_TestCase
+class SlugifyViewHelperTest extends TestCase
 {
     /**
      * @test

@@ -5,13 +5,13 @@ namespace Test\BaseApplication\Filter;
 use BaseApplication\Filter\DateTimeFilter;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class DateTimeFilterTest
  * @package Test\BaseApplication\Filter
  */
-class DateTimeFilterTest extends PHPUnit_Framework_TestCase
+class DateTimeFilterTest extends TestCase
 {
     /**
      * @test

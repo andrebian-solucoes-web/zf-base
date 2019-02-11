@@ -6,13 +6,13 @@ use BaseApplication\Database\Mysql\CustomDateTimeType;
 use DateTime;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Types\Type;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class CustomDateTimeTypeTest
  * @package Test\BaseApplication\Database\Mysql
  */
-class CustomDateTimeTypeTest extends PHPUnit_Framework_TestCase
+class CustomDateTimeTypeTest extends TestCase
 {
     /**
      * @test

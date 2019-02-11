@@ -3,13 +3,13 @@
 namespace Test\BaseApplication\Validator;
 
 use BaseApplication\Validator\NameAndLastName;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class NameAndLastNameTest
  * @package Test\BaseApplication\Validator
  */
-class NameAndLastNameTest extends PHPUnit_Framework_TestCase
+class NameAndLastNameTest extends TestCase
 {
     /**
      * @test

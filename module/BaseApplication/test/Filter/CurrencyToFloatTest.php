@@ -4,13 +4,13 @@ namespace Test\BaseApplication\Filter;
 
 use BaseApplication\Filter\CurrencyToFloat;
 use DateTime;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class CurrencyToFloatTest
  * @package Test\BaseApplication\Filter
  */
-class CurrencyToFloatTest extends PHPUnit_Framework_TestCase
+class CurrencyToFloatTest extends TestCase
 {
     /**
      * @test

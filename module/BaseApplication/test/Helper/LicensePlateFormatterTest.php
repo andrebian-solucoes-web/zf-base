@@ -3,13 +3,13 @@
 namespace Test\BaseApplication\Helper;
 
 use BaseApplication\Helper\LicensePlateFormatter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class LicensePlateFormatterTest
  * @package Test\BaseApplication\Helper
  */
-class LicensePlateFormatterTest extends PHPUnit_Framework_TestCase
+class LicensePlateFormatterTest extends TestCase
 {
     /**
      * @test

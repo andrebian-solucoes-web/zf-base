@@ -3,13 +3,13 @@
 namespace Test\BaseApplication\Helper;
 
 use BaseApplication\Helper\PriceFormatter;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class PriceFormatterTest
  * @package Test\BaseApplication\Helper
  */
-class PriceFormatterTest extends PHPUnit_Framework_TestCase
+class PriceFormatterTest extends TestCase
 {
     /**
      * @test

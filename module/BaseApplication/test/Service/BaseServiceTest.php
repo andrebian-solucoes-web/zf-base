@@ -2,10 +2,9 @@
 
 namespace Test\BaseApplication\Service;
 
-use BaseApplication\Service\BaseService;
 use Doctrine\ORM\EntityManager;
 use Mockery;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use Test\BaseApplication\Service\Dummy\DummyEntity;
 use Test\BaseApplication\Service\Dummy\DummyService;
 use Zend\ServiceManager\ServiceManager;
@@ -14,7 +13,7 @@ use Zend\ServiceManager\ServiceManager;
  * Class BaseServiceTest
  * @package Test\BaseApplication\Service
  */
-class BaseServiceTest extends PHPUnit_Framework_TestCase
+class BaseServiceTest extends TestCase
 {
     protected $serviceManager;
 
