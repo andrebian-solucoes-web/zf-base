@@ -66,7 +66,7 @@ abstract class CrudController extends BaseController
         /** @var Request $request */
         $request = $this->getRequest();
 
-        if (!is_object($this->form)) {
+        if (! is_object($this->form)) {
             /** @var Form $form */
             $form = new $this->form();
         } else {
@@ -129,7 +129,7 @@ abstract class CrudController extends BaseController
         $request = $this->getRequest();
 
         $form = $this->form;
-        if (!is_object($form)) {
+        if (! is_object($form)) {
             /** @var Form $form */
             $form = new $this->form('edit', true);
         }
@@ -144,7 +144,7 @@ abstract class CrudController extends BaseController
         $formData = $data->toArray();
         $formData['active'] = 1;
 
-        if (!$data->isActive()) {
+        if (! $data->isActive()) {
             $formData['active'] = 0;
         }
 
@@ -156,7 +156,7 @@ abstract class CrudController extends BaseController
 
         if ($request->isPost()) {
             $data = $request->getPost()->toArray();
-            if (!isset($data['id']) || empty($data['id'])) {
+            if (! isset($data['id']) || empty($data['id'])) {
                 $data['id'] = $id;
             }
 

@@ -104,7 +104,9 @@ class ZapLoadingViewHelper extends AbstractHelper
             </style>
 EOL;
 
-        $loading = $style . '<svg class="spinner-container ' . $customClass . '" width="' . $width . 'px" height="' . $height . 'px" viewBox="0 0 52 52"><circle class="path" cx="26px" cy="26px" r="20px" fill="none" stroke-width="4px"></circle></svg>';
+        $loading = $style . '<svg class="spinner-container ' . $customClass . '" width="' . $width . 'px" height="';
+        $loading .= $height . 'px" viewBox="0 0 52 52"><circle class="path" cx="26px" cy="26px" r="20px" fill="none"';
+        $loading .= 'stroke-width="4px"></circle></svg>';
 
         return $loading;
     }

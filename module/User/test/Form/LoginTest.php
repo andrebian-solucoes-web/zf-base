@@ -34,10 +34,10 @@ class LoginTest extends TestCase
 
     public function getData()
     {
-        return array(
+        return [
             'email' => 'test@test.com',
             'password' => 'test-123',
-        );
+        ];
     }
 
     public function formFields()
@@ -52,7 +52,7 @@ class LoginTest extends TestCase
     public function getFormAttributes()
     {
         $dataProviderTest = $this->formFields();
-        $definedAttributes = array();
+        $definedAttributes = [];
         foreach ($dataProviderTest as $item) {
             $definedAttributes[] = $item[0];
         }
@@ -90,7 +90,7 @@ class LoginTest extends TestCase
     {
         $definedAttributes = $this->getFormAttributes();
         $attributesFormClass = $this->form->getElements();
-        $attributesForm = array();
+        $attributesForm = [];
         foreach ($attributesFormClass as $key => $value) {
             $attributesForm[] = $key;
             $messageAssert = 'Attribute "' . $key . '" not found in class test. Value - ' . $value->getName();

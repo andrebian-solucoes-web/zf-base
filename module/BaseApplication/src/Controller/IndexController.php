@@ -1,6 +1,7 @@
 <?php
 
 namespace BaseApplication\Controller;
+
 use User\Entity\User;
 use User\Form\Login;
 use User\Service\UserService;
@@ -10,7 +11,9 @@ use User\Service\UserService;
  * @package BaseApplication
  */
 class IndexController extends CrudController implements
-    BindPreFormDataInterface, BindDataToFormInterface, BindDataToServiceInterface
+    BindPreFormDataInterface,
+    BindDataToFormInterface,
+    BindDataToServiceInterface
 {
     public function __construct()
     {

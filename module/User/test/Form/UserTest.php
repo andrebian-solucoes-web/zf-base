@@ -58,7 +58,7 @@ class UserTest extends TestCase
     public function getFormAttributes()
     {
         $dataProviderTest = $this->formFields();
-        $definedAttributes = array();
+        $definedAttributes = [];
         foreach ($dataProviderTest as $item) {
             $definedAttributes[] = $item[0];
         }
@@ -96,7 +96,7 @@ class UserTest extends TestCase
     {
         $definedAttributes = $this->getFormAttributes();
         $attributesFormClass = $this->form->getElements();
-        $attributesForm = array();
+        $attributesForm = [];
         foreach ($attributesFormClass as $key => $value) {
             $attributesForm[] = $key;
             $messageAssert = 'Attribute "' . $key . '" not found in class test. Value - ' . $value->getName();

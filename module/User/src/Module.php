@@ -95,7 +95,6 @@ class Module implements DependencyIndicatorInterface
             if (! $auth->hasIdentity() && ! in_array($matchedRoute, $whitelist)) {
                 return $controller->redirect()->toRoute($redirect);
             }
-
         }, 100);
     }
 

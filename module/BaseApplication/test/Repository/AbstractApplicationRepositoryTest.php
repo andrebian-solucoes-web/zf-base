@@ -69,7 +69,7 @@ class AbstractApplicationRepositoryTest extends PHPUnit_Framework_TestCase
                 'name' => 'Andre',
                 'role' => new Role(['id' => 1])
             ],
-            ['name' => 'ASC'])
-        );
+            ['name' => 'ASC']
+        ));
     }
 }

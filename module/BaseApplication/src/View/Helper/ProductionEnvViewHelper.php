@@ -22,8 +22,7 @@ class ProductionEnvViewHelper extends AbstractHelper
             return false;
         }
 
-        if (
-        (isset($_SERVER['SERVER_ADDR'])
+        if ((isset($_SERVER['SERVER_ADDR'])
             && strpos($_SERVER['SERVER_ADDR'], 'homologacao') !== false)
         || (isset($_SERVER['HTTP_HOST'])
             && strpos($_SERVER['HTTP_HOST'], 'homologacao') !== false)) {

@@ -25,18 +25,18 @@ abstract class AbstractApplicationRepository extends EntityRepository implements
             ->where('o.active = :active')
             ->setParameter('active', $active);
 
-        if (!empty($data)) {
+        if (! empty($data)) {
             foreach ($data as $criteria => $value) {
                 if (is_object($value)) {
                     $qb->andWhere('o.' . $criteria . ' = :' . $criteria);
                     $qb->setParameter($criteria, $value);
-                } else if (is_string($value)) {
+                } elseif (is_string($value)) {
                     $qb->andWhere($qb->expr()->like('o.' . $criteria, $qb->expr()->literal('%' . $value . '%')));
                 }
             }
         }
 
-        if (!empty($orderOptions)) {
+        if (! empty($orderOptions)) {
             foreach ($orderOptions as $name => $order) {
                 $qb->add('orderBy', 'o.' . $name . ' ' . $order);
             }
@@ -53,7 +53,8 @@ abstract class AbstractApplicationRepository extends EntityRepository implements
     {
         $entityName = (string)$this->getEntityName();
         /** @var Query $query */
-        $query = $this->getEntityManager()->createQuery('SELECT COUNT(u.id) FROM ' . $entityName . ' u WHERE u.active=true');
+        $query = $this->getEntityManager()
+            ->createQuery('SELECT COUNT(u.id) FROM ' . $entityName . ' u WHERE u.active=true');
         $count = $query->getSingleScalarResult();
 
         return $count;

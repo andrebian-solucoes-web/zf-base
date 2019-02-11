@@ -2,7 +2,6 @@
 
 namespace BaseApplication\Repository;
 
-
 /**
  * Interface ApplicationRepositoryInterface
  * @package BaseApplication\Repository

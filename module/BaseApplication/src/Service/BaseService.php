@@ -109,7 +109,7 @@ abstract class BaseService implements ServiceInterface
     {
         $entityName = $this->getEntityName($isTest);
 
-        if (!isset($data['id']) || empty($data['id'])) {
+        if (! isset($data['id']) || empty($data['id'])) {
             $entity = new $entityName($data);
             $this->entityManager->persist($entity);
         } else {
@@ -135,7 +135,7 @@ abstract class BaseService implements ServiceInterface
 
         if ($isTest) {
             $lastPiece = end($entityName);
-            unset($entityName[(count($entityName))-1]);
+            unset($entityName[(count($entityName)) - 1]);
 
             $treatedEntityName = implode('\\', $entityName);
             $treatedEntityName .= '\\' . str_replace('Service', 'Entity', $lastPiece);

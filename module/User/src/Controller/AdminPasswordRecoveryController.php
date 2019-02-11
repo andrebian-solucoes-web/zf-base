@@ -49,6 +49,7 @@ class AdminPasswordRecoveryController extends BaseController
      * @return \Zend\Http\Response|ViewModel
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Exception
      */
     public function recoverPasswordAction()
     {
@@ -57,7 +58,7 @@ class AdminPasswordRecoveryController extends BaseController
 
         $entityManager = $this->getServiceManager()->get(EntityManager::class);
         /** @var PasswordRecoveryToken $passwordRecoveryToken */
-        if (!$passwordRecoveryToken = $entityManager->getRepository(PasswordRecoveryToken::class)->findOneBy([
+        if (! $passwordRecoveryToken = $entityManager->getRepository(PasswordRecoveryToken::class)->findOneBy([
             'active' => true,
             'token' => $token
         ])) {
@@ -79,7 +80,8 @@ class AdminPasswordRecoveryController extends BaseController
             if ($data['password'] !== $data['password-confirmation']) {
                 $this->flashMessenger()->setNamespace('error')->addMessage('As senhas não coincidem.');
 
-                return $this->redirect()->toUrl('/admin/user/recovery-password-action?email=' . $email . '&token=' . $token);
+                return $this->redirect()
+                    ->toUrl('/admin/user/recovery-password-action?email=' . $email . '&token=' . $token);
             }
 
             $user = $passwordRecoveryToken->getUser();

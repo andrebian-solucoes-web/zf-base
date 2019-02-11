@@ -215,7 +215,7 @@ class Mail
         $html->type = "text/html";
 
         $body = new MimeMessage();
-        $body->setParts(array($html));
+        $body->setParts([$html]);
         $this->body = $body;
 
         $this->message->setFrom($this->from)
@@ -234,7 +234,7 @@ class Mail
             $bodyContent = $mimeMessage->generateMessage();
             $bodyPart = new MimePart($bodyContent);
             $bodyPart->type = Mime::TYPE_HTML; // TODO
-            $attachmentParts = array();
+            $attachmentParts = [];
             $info = new finfo(FILEINFO_MIME_TYPE);
             foreach ($this->attachments as $attachment) {
                 if (! is_file($attachment)) {

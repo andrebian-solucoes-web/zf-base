@@ -24,7 +24,7 @@ class SearchController extends BaseController
         $data = $this->params()->fromQuery();
         $repositoryClassName = '\\' . $data['repository'];
 
-        if (!class_exists($repositoryClassName)) {
+        if (! class_exists($repositoryClassName)) {
             throw new Exception('Invalid parameters');
         }
 

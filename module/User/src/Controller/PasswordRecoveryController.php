@@ -57,7 +57,7 @@ class PasswordRecoveryController extends BaseController
 
         $entityManager = $this->getServiceManager()->get(EntityManager::class);
         /** @var PasswordRecoveryToken $passwordRecoveryToken */
-        if (!$passwordRecoveryToken = $entityManager->getRepository(PasswordRecoveryToken::class)->findOneBy([
+        if (! $passwordRecoveryToken = $entityManager->getRepository(PasswordRecoveryToken::class)->findOneBy([
             'active' => true,
             'token' => $token
         ])) {

@@ -28,7 +28,7 @@ class NameAndLastName extends AbstractValidator
         $words = explode(' ', $value);
         $valid = count($words) > 1;
 
-        if (!$valid) {
+        if (! $valid) {
             $this->abstractOptions['messages'][self::INVALID] = $this->messageTemplates[self::INVALID];
         }
 

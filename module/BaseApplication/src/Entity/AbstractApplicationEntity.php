@@ -49,7 +49,7 @@ abstract class AbstractApplicationEntity implements ApplicationEntityInterface
         $this->modified = new DateTime();
         $this->active = true;
 
-        if (!empty($data)) {
+        if (! empty($data)) {
             $hydrator = new ClassMethods(false);
             $hydrator->hydrate($data, $this);
         }
@@ -130,9 +130,9 @@ abstract class AbstractApplicationEntity implements ApplicationEntityInterface
     /**
      * @param array $data
      */
-    public function updateProperties($data = array())
+    public function updateProperties($data = [])
     {
-        if (!empty($data)) {
+        if (! empty($data)) {
             $hydrator = new ClassMethods(false);
             $hydrator->hydrate($data, $this);
         }
