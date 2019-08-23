@@ -75,6 +75,8 @@ return [
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404' => __DIR__ . '/../view/error/404.phtml',
             'error/index' => __DIR__ . '/../view/error/index.phtml',
+            'flash-messages' => __DIR__ . '/../view/partials/flash-messages.phtml',
+            'admin/pagination' => __DIR__ . '/../view/partials/admin/pagination.phtml'
         ],
         'template_path_stack' => [
             __DIR__ . '/../view',
