@@ -2,16 +2,18 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
+$admin = isset($argv[2]) ?: false;
+
 if (strpos($argv[1], '.json') !== false) {
     $file = $argv[1];
     $file = __DIR__ . '/../data/bake/' . $file;
-    parseFile($file);
+    parseFile($file, $admin);
 } else {
     if (is_dir($argv[1])) {
         if ($result = glob($argv[1] . '/*.json')) {
             foreach ($result as $file) {
                 $file = __DIR__ . '/../' . $file;
-                parseFile($file);
+                parseFile($file, $admin);
             }
 
         }
@@ -23,7 +25,7 @@ if (strpos($argv[1], '.json') !== false) {
 /**
  * @param $file
  */
-function parseFile($file)
+function parseFile($file, $admin = false)
 {
     $input = file_get_contents($file);
     $input = json_decode($input, true);
@@ -39,8 +41,8 @@ function parseFile($file)
     mountForm($input[$fullyQualifiedNamespace], $namespace, $resultClass);
     mountFormFilter($input[$fullyQualifiedNamespace], $namespace, $resultClass);
     mountService($namespace, $resultClass);
-    mountController($namespace, $resultClass);
-    mountViews($input[$fullyQualifiedNamespace], $namespace, $resultClass);
+    mountController($namespace, $resultClass, $admin);
+    mountViews($input[$fullyQualifiedNamespace], $namespace, $resultClass, $admin);
 }
 
 /**
@@ -52,7 +54,7 @@ function mountEntity($data, $namespace, $className)
 {
     $baseClassName = $className;
     $path = __DIR__ . '/../module/' . $namespace . '/src/Entity';
-    if (!is_dir($path)) {
+    if (! is_dir($path)) {
         mkdir($path, 0777, true);
     }
     $destination = $path . '/' . $className . '.php';
@@ -66,7 +68,7 @@ namespace $namespace\Entity;
 EOL;
 
     $uses = <<<EOL
-use Application\Entity\AbstractApplicationEntity;
+use BaseApplication\Entity\AbstractApplicationEntity;
 use Doctrine\ORM\Mapping as ORM;
 
 EOL;
@@ -125,7 +127,6 @@ EOL;
                 }
 
                 $fields .= <<<EOL
-
     /**
      * @var $targetName
      *
@@ -275,10 +276,11 @@ function mountForm($data, $namespace, $className)
     $className .= 'Form';
     $baseClassName = $className;
     $path = __DIR__ . '/../module/' . $namespace . '/src/Form';
-    if (!is_dir($path)) {
+    if (! is_dir($path)) {
         mkdir($path, 0777, true);
     }
     $destination = $path . '/' . $className . '.php';
+    $formFilter = $namespace . '\Form\Filter\ ' . $baseClassName . 'Filter;';
 
     $header = <<<EOL
 <?php
@@ -290,10 +292,11 @@ EOL;
 
     $uses = <<<EOL
 use Zend\Form\Form;
-use Application\Assets\Form\FormSaveButton;
+use BaseApplication\Assets\Form\FormSaveButton;
 use Zend\Form\Element\Text;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Csrf;
+use $formFilter
 
 EOL;
 
@@ -473,8 +476,8 @@ EOL;
 function mountFormFilter($data, $namespace, $className)
 {
     $className .= 'FormFilter';
-    $path = __DIR__ . '/../module/' . $namespace . '/src/Form';
-    if (!is_dir($path)) {
+    $path = __DIR__ . '/../module/' . $namespace . '/src/Form/Filter';
+    if (! is_dir($path)) {
         mkdir($path, 0777, true);
     }
     $destination = $path . '/' . $className . '.php';
@@ -482,7 +485,7 @@ function mountFormFilter($data, $namespace, $className)
     $header = <<<EOL
 <?php
 
-namespace $namespace\Form;
+namespace $namespace\Form\Filter;
 
 
 EOL;
@@ -525,7 +528,7 @@ EOL;
 
     public function getInputFilter()
     {
-        if (!\$this->inputFilter) {
+        if (! \$this->inputFilter) {
             \$inputFilter = new InputFilter();
 
 
@@ -597,7 +600,7 @@ function mountService($namespace, $className)
 {
     $className .= 'Service';
     $path = __DIR__ . '/../module/' . $namespace . '/src/Service';
-    if (!is_dir($path)) {
+    if (! is_dir($path)) {
         mkdir($path, 0777, true);
     }
     $destination = $path . '/' . $className . '.php';
@@ -607,7 +610,7 @@ function mountService($namespace, $className)
 
 namespace $namespace\Service;
 
-use Application\Service\BaseService;
+use BaseApplication\Service\BaseService;
 
 /**
  * Class $className
@@ -615,10 +618,7 @@ use Application\Service\BaseService;
  */
 class $className extends BaseService
 {
-    public function save(array \$data)
-    {
-        //TODO implement here
-    }
+
 }
 
 EOL;
@@ -632,12 +632,18 @@ EOL;
  * @param $namespace
  * @param $className
  */
-function mountController($namespace, $className)
+function mountController($namespace, $className, $admin = false)
 {
     $baseClass = $className;
     $className .= 'Controller';
     $path = __DIR__ . '/../module/' . $namespace . '/src/Controller';
-    if (!is_dir($path)) {
+
+    $adminComplement = '';
+    if ($admin) {
+        $path .= '/Admin';
+        $adminComplement = '\Admin';
+    }
+    if (! is_dir($path)) {
         mkdir($path, 0777, true);
     }
     $destination = $path . '/' . $className . '.php';
@@ -647,16 +653,16 @@ function mountController($namespace, $className)
     $serviceContent = <<<EOL
 <?php
 
-namespace $namespace\Controller;
+namespace $namespace\Controller{$adminComplement};
 
-use Application\Controller\CrudController;
+use BaseApplication\Controller\CrudController;
 use $namespace\\Entity\\$baseClass;
 use $namespace\\Form\\{$baseClass}Form;
 use $namespace\\Service\\{$baseClass}Service;
 
 /**
  * Class $className
- * @package $namespace\Controller
+ * @package $namespace\Controller{$adminComplement}
  */
 class $className extends CrudController
 {
@@ -682,55 +688,60 @@ EOL;
  * @param $namespace
  * @param $className
  */
-function mountViews($data, $namespace, $className)
+function mountViews($data, $namespace, $className, $admin = false)
 {
     $namespaceRoute = getRoute($namespace);
     $basePath = __DIR__ . '/../module/'.$namespace.'/view/' . $namespaceRoute;
+
+    if ($admin) {
+        $basePath .= '/admin';
+    }
+
     $endPath = getRoute($className);
 
     $destinationPath = $basePath . '/' . $endPath;
-    if (!is_dir($destinationPath)) {
+    if (! is_dir($destinationPath)) {
         mkdir($destinationPath, 0777, true);
     }
 
-    $formDestination = $destinationPath . '/form.twig';
-    $indexDestination = $destinationPath . '/index.twig';
-    $inactiveDestination = $destinationPath . '/show-inactive.twig';
-    $listDestination = $destinationPath . '/list.twig';
-    $addDestination = $destinationPath . '/add.twig';
-    $editDestination = $destinationPath . '/edit.twig';
-    $viewContentDestination = $destinationPath . '/view.twig';
+    $formDestination = $destinationPath . '/form.phtml';
+    $indexDestination = $destinationPath . '/index.phtml';
+    $inactiveDestination = $destinationPath . '/show-inactive.phtml';
+    $listDestination = $destinationPath . '/list.phtml';
+    $addDestination = $destinationPath . '/add.phtml';
+    $editDestination = $destinationPath . '/edit.phtml';
+    $viewContentDestination = $destinationPath . '/view.phtml';
 
     $formContent = <<<EOL
 <form action="" method="post" enctype="application/x-www-form-urlencoded">
-    {{ formElement(form.get('id')) }}
-    {{ formElement(form.get('csrf')) }}
+    <?= \$this->formElement(\$form->get('id')); ?>
+    <?= \$this->formElement(\$form->get('csrf')); ?>
 
 EOL;
 
     foreach ($data as $formItem => $definitions) {
         $formContent .= <<<EOL
     <div class="form-group">
-        {{ formLabel(form.get('$formItem')) }}
-        {{ formElement(form.get('$formItem')) }}
+        <?= \$this->formLabel(\$form->get('$formItem')); ?>
+        <?= \$this->formElement(\$form->get('$formItem')); ?>
 
 EOL;
         if (isset($definitions['hint']) && !empty($definitions['hint'])) {
             $hint = $definitions['hint'];
             $formContent .= <<<EOL
-        <small>{{ translate('$hint') }}</small>
+        <small><?= \$this->translate('$hint'); ?></small>
 
 EOL;
         }
 
         $formContent .= <<<EOL
-        {% if errorMessages.$formItem != null %}
+        <?php if (\$this->errorMessages['$formItem'] != '') : ?>
             <div class="error">
-                {% for message in errorMessages.$formItem %}
-                    {{ translate(message) }}
-                {% endfor %}
+                <?php foreach(\$this->errorMessages['$formItem'] as \$errorMessage) : ?>
+                    <?= \$this->translate(\$errorMessage); ?>
+                <?php endforeach; ?>
             </div>
-        {% endif %}
+        <?php endif; ?>
     </div>
 
 EOL;
@@ -741,7 +752,7 @@ EOL;
 
     <br clear="all"/>
     <div class="form-group col-lg-2">
-        {{ formSubmit(form.get('submit')) }}
+        <?= \$this->formSubmit(\$form->get('submit')); ?>
     </div>
 </form>
 EOL;
@@ -750,90 +761,82 @@ EOL;
     echo '[X] Gerado view form' . PHP_EOL;
 
     $addContent = <<<EOL
-{% extends "layout/layout.twig" %}
+<?php \$this->headTitle('Adicionando'); ?>
 
-{% block page_title %} - Adicionando $className{% endblock %}
-
-{% block content %}
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">Adicionando $className</h1>
-        </div>
-    </div>
-
-    <div class="row">
+<div class="row">
     <div class="col-lg-12">
+        <h1 class="page-header">Adicionando $className</h1>
+    </div>
+</div>
 
-        <ul class="breadcrumb">
-            <li>
-                <a href="{{ url('home') }}">Dashboard</a>
-            </li>
-            <li>
-                <a href="{{ url('$endPath') }}">
-                    $namespace &rarr; $className
-                </a>
-            </li>
-            <li>Adicionar nova</li>
-        </ul>
+<div class="row">
+<div class="col-lg-12">
 
-        {% include 'partials/flash-messages.twig' %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="<?= \$this->url('home'); ?>">Dashboard</a>
+        </li>
+        <li>
+            <a href="<?= \$this->url('$endPath'); ?>">
+                $namespace &rarr; $className
+            </a>
+        </li>
+        <li>Adicionar nova</li>
+    </ul>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Adicionando $className
-            </div>
-            <div class="panel-body">
-                {% include '$namespaceRoute/$endPath/form.twig' %}
-            </div>
+    <?= \$this->partial('flash-messages'); ?>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Adicionando $className
+        </div>
+        <div class="panel-body">
+            <?= \$this->render('$namespaceRoute/$endPath/form.phtml'); ?>
         </div>
     </div>
-    <br clear="all"/><br/><br/><br/><br/><br/><br/>
-{% endblock %}
+</div>
+<br clear="all"/><br/><br/><br/><br/><br/><br/>
 EOL;
 
     file_put_contents($addDestination, $addContent);
     echo '[X] Gerado view add' . PHP_EOL;
 
     $editContent = <<<EOL
-{% extends "layout/layout.twig" %}
+<?php \$this->headTitle('Editando'); ?>
 
-{% block page_title %} - Editando $className{% endblock %}
-
-{% block content %}
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">Editando $className</h1>
-        </div>
-    </div>
-
-    <div class="row">
+<div class="row">
     <div class="col-lg-12">
+        <h1 class="page-header">Editando $className</h1>
+    </div>
+</div>
 
-        <ul class="breadcrumb">
-            <li>
-                <a href="{{ url('home') }}">Dashboard</a>
-            </li>
-            <li>
-                <a href="{{ url('$endPath') }}">
-                    $namespace &rarr; $className
-                </a>
-            </li>
-            <li>Editando</li>
-        </ul>
+<div class="row">
+<div class="col-lg-12">
 
-        {% include 'partials/flash-messages.twig' %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="<?= \$this->url('home'); ?>">Dashboard</a>
+        </li>
+        <li>
+            <a href="<?= \$this->url('$endPath'); ?>">
+                $namespace &rarr; $className
+            </a>
+        </li>
+        <li>Editando</li>
+    </ul>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Editando $className
-            </div>
-            <div class="panel-body">
-                {% include '$namespaceRoute/$endPath/form.twig' %}
-            </div>
+    <?= \$this->partial('flash-messages'); ?>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Editando $className
+        </div>
+        <div class="panel-body">
+            <?= \$this->render('$namespaceRoute/$endPath/form.phtml'); ?>
         </div>
     </div>
-    <br clear="all"/><br/><br/><br/><br/><br/><br/>
-{% endblock %}
+</div>
+<br clear="all"/><br/><br/><br/><br/><br/><br/>
 EOL;
 
     file_put_contents($editDestination, $editContent);
@@ -841,68 +844,65 @@ EOL;
 
 
     $indexContent = <<<EOL
-{% extends "layout/layout.twig" %}
+<?php \$this->headTitle('Tabela {$className}'); ?>
 
-{% block page_title %} - Tabela $className{% endblock %}
-
-{% block content %}
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">Tabela $className</h1>
-        </div>
-        <!-- /.col-lg-12 -->
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Tabela $className</h1>
     </div>
+    <!-- /.col-lg-12 -->
+</div>
 
-    <div class="row">
-        <div class="col-lg-12">
+<div class="row">
+    <div class="col-lg-12">
 
-            <ul class="breadcrumb">
-                <li>
-                    <a href="{{ url('home') }}">Dashboard</a>
-                </li>
-                <li>$namespace &rarr; $className
-                </li>
-            </ul>
-            {% include 'partials/flash-messages.twig' %}
+        <ul class="breadcrumb">
+            <li>
+                <a href="<?= \$this->url('home'); ?>">Dashboard</a>
+            </li>
+            <li>$namespace &rarr; $className
+            </li>
+        </ul>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <a href="{{ url('$endPath', {'action': 'add'}) }}"
-                       class="btn btn-primary icon icon-left">
-                        <i class="fa fa-plus"></i>
-                        {{ translate('Add new') }}
-                    </a>&nbsp;
-                    <a href="{{ url('$endPath', {'action': 'showInactive'}) }}"
-                       class="btn btn-default">{{ translate('View inactives') }}</a>
-                    &nbsp;
-                    <a href="#"
-                       class="btn btn-warning btn-pesquisa">Pesquisar</a>
+        <?= \$this->partial('flash-messages'); ?>
 
-                    <div class="pesquisa-form">
-                        <br/>
-                        <form action="{{ url('search') }}" method="get">
-                            <input type="hidden" name="repository" value="$namespace\\Entity\\$className">
-                            <input type="hidden" name="alias" value="$endPath">
-                            <div class="form-group col-lg-2">
-                                <input type="text" class="form-control" name="id" placeholder="Placeholder">
-                            </div>
-                            <div class="form-group col-lg-2">
-                                <input type="submit" class="btn btn-primary" value="Aplicar filtros">
-                            </div>
-                        </form>
-                        <br clear="all"/>
-                    </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="<?= \$this->url('$endPath', ['action' => 'add']); ?>"
+                   class="btn btn-primary icon icon-left">
+                    <i class="fa fa-plus"></i>
+                    <?= \$this->translate('Add new'); ?>
+                </a>&nbsp;
+                <a href="<?= \$this->url('$endPath', ['action' => 'showInactive']); ?>"
+                   class="btn btn-default"><?= \$this->translate('View inactives'); ?></a>
+                &nbsp;
+                <a href="#"
+                   class="btn btn-warning btn-pesquisa">Pesquisar</a>
+
+                <div class="pesquisa-form">
+                    <br/>
+                    <form action="<?= \$this->url('search'); ?>" method="get">
+                        <input type="hidden" name="repository" value="$namespace\\Entity\\$className">
+                        <input type="hidden" name="alias" value="$endPath">
+                        <div class="form-group col-lg-2">
+                            <input type="text" class="form-control" name="id" placeholder="Placeholder">
+                        </div>
+                        <div class="form-group col-lg-2">
+                            <input type="submit" class="btn btn-primary" value="Aplicar filtros">
+                        </div>
+                    </form>
+                    <br clear="all"/>
                 </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    {% include '$namespaceRoute/$endPath/list.twig' %}
-                </div>
-                <!-- /.panel-body -->
             </div>
-            <!-- /.panel -->
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <?= \$this->render('$namespaceRoute/$endPath/list.phtml'); ?>
+            </div>
+            <!-- /.panel-body -->
         </div>
+        <!-- /.panel -->
     </div>
-{% endblock %}
+</div>
 EOL;
 
     file_put_contents($indexDestination, $indexContent);
@@ -914,41 +914,41 @@ EOL;
     <thead>
     <tr>
         <th>Id</th>
-        <th>{{ translate('Actions') }}</th>
+        <th><?= \$this->translate('Actions'); ?></th>
     </tr>
     </thead>
     <tbody>
-    {% for item in collection %}
+    <?php foreach (\$this->collection as \$item) : ?>
         <tr>
             <td>
-                {{ item.id }}
+                <?= \$item->getId(); ?>
             </td>
             <td>
-                <a href="{{ url('$endPath', {'action': 'view', 'id': item.id}) }}"
+                <a href="<?= \$this->url('$endPath', ['action' => 'view', 'id' => \$item->getId()]); ?>"
                    class="btn btn-success btn-sm icon icon-left">
                     <i class="fa fa-eye"></i>
                     Visualizar
                 </a>
                 &nbsp;
-                <a href="{{ url('$endPath', {'action': 'edit', 'id': item.id}) }}"
+                <a href="<?= \$this->url('$endPath', ['action' => 'edit', 'id' => \$item->getId()]); ?>"
                    class="btn btn-warning btn-sm icon icon-left">
                     <i class="fa fa-edit"></i>
-                    {{ translate('Edit') }}
+                    <?= \$this->translate('Edit'); ?>
                 </a>&nbsp;
-                <a href="#" class="btn btn-danger btn-sm icon icon-left delete-link" id="{{ item.id }}">
+                <a href="#" class="btn btn-danger btn-sm icon icon-left delete-link" id="<?= \$item->getId(); ?>>
                     <i class="fa fa-trash-o"></i>&nbsp;
                     Excluir
                 </a>
                 <div style="display: none;">
-                    <form action="{{ url('$endPath', {'action': 'delete', 'id': item.id}) }}"
+                    <form action="<?= \$this->url('$endPath', ['action' => 'delete', 'id' => \$item->getId()]); ?>"
                           method="post">
-                        <input type="submit" id="delete-{{ item.id }}"
+                        <input type="submit" id="delete-<?= \$item->getId(); ?>"
                                class="btn btn-danger btn-sm btn-icon icon-left" value="Remover">
                     </form>
                 </div>
             </td>
         </tr>
-    {% endfor %}
+    <?php endforeach; ?>
     </tbody>
 </table>
 EOL;
@@ -958,50 +958,47 @@ EOL;
 
 
     $inactiveContent = <<<EOL
-{% extends "layout/layout.twig" %}
+<?php \$this->headTitle('{$className} inativos'); ?>
 
-{% block page_title %} - $className inativos{% endblock %}
-
-{% block content %}
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">$className inativos</h1>
-        </div>
-        <!-- /.col-lg-12 -->
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">$className inativos</h1>
     </div>
+    <!-- /.col-lg-12 -->
+</div>
 
-    <div class="row">
-        <div class="col-lg-12">
+<div class="row">
+    <div class="col-lg-12">
 
-            <ul class="breadcrumb">
-                <li>
-                    <a href="{{ url('home') }}">Dashboard</a>
-                </li>
-                <li>$namespace &rarr; <a href="{{ url('$endPath') }}">$className</a> &rarr; $className inativos
-                </li>
-            </ul>
-            {% include 'partials/flash-messages.twig' %}
+        <ul class="breadcrumb">
+            <li>
+                <a href="<?= \$this->url('home'); ?>">Dashboard</a>
+            </li>
+            <li>$namespace &rarr; <a href="<?= \$this->url('$endPath'); ?>">$className</a> &rarr; $className inativos
+            </li>
+        </ul>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <a href="{{ url('$endPath', {'action': 'add'}) }}"
-                       class="btn btn-primary icon icon-left">
-                        <i class="fa fa-plus"></i>
-                        {{ translate('Add new') }}
-                    </a>&nbsp;
-                    <a href="{{ url('$endPath', {'action': 'index'}) }}"
-                       class="btn btn-success">{{ translate('View actives') }}</a>
-                </div>
-                <!-- /.panel-heading -->
-                <div class="panel-body">
-                    {% include '$namespaceRoute/$endPath/list.twig' %}
-                </div>
-                <!-- /.panel-body -->
+        <?= \$this->partial('flash-messages'); ?>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="<?= \$this->url('$endPath', ['action' => 'add']); ?>"
+                   class="btn btn-primary icon icon-left">
+                    <i class="fa fa-plus"></i>
+                    <?= \$this->translate('Add new'); ?>
+                </a>&nbsp;
+                <a href="<?= \$this->url('$endPath', ['action' => 'index']); ?>"
+                   class="btn btn-success"><?= \$this->translate('View actives'); ?></a>
             </div>
-            <!-- /.panel -->
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <?= \$this->render('$namespaceRoute/$endPath/list.phtml'); ?>
+            </div>
+            <!-- /.panel-body -->
         </div>
+        <!-- /.panel -->
     </div>
-{% endblock %}
+</div>
 EOL;
 
     file_put_contents($inactiveDestination, $inactiveContent);
@@ -1009,75 +1006,71 @@ EOL;
 
 
     $viewContent = <<<EOL
-{% extends "layout/layout.twig" %}
+<?php \$this->headTitle('Detalhes de {$className}'); ?>
 
-{% block page_title %} - Detalhes de $className{% endblock %}
-
-{% block content %}
-    <div class="row">
-        <div class="col-lg-12">
-            <h1 class="page-header">Detalhes de $className</h1>
-        </div>
-    </div>
-
-    <div class="row">
+<div class="row">
     <div class="col-lg-12">
+        <h1 class="page-header">Detalhes de $className</h1>
+    </div>
+</div>
 
-        <ul class="breadcrumb">
-            <li>
-                <a href="{{ url('home') }}">Dashboard</a>
-            </li>
-            <li>
-                <a href="{{ url('$namespaceRoute') }}">
-                    $namespace
-                </a>
-            </li>
-            <li>
-                <a href="{{ url('$endPath') }}">
-                    $className
-                </a>
-            </li>
-            <li>Detalhes de $className</li>
-        </ul>
+<div class="row">
+<div class="col-lg-12">
 
-        {% include 'partials/flash-messages.twig' %}
+    <ul class="breadcrumb">
+        <li>
+            <a href="<?= \$this->url('home'); ?>">Dashboard</a>
+        </li>
+        <li>
+            <a href="<?= \$this->url('$namespaceRoute'); ?>">
+                $namespace
+            </a>
+        </li>
+        <li>
+            <a href="<?= \$this->url('$endPath'); ?>">
+                $className
+            </a>
+        </li>
+        <li>Detalhes de $className</li>
+    </ul>
 
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                Detalhes de $className
-            </div>
-            <div class="panel-body">
+    <?= \$this->partial('flash-messages'); ?>
 
-                <table width="100%" class="table table-striped table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <th>Item</th>
-                        <th>Valor</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>#</td>
-                        <td>{{ data.id }}</td>
-                    </tr>
-                    <tr>
-                        <td>Ação</td>
-                        <td>
-                            <a class="btn btn-warning"
-                               href="{{ url('$endPath', {'action': 'edit', 'id': data.id}) }}">
-                                Editar
-                            </a>
-                        </td>
-                    </tr>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Detalhes de $className
+        </div>
+        <div class="panel-body">
 
-                    </tbody>
+            <table width="100%" class="table table-striped table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Valor</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>#</td>
+                    <td><?= \$this->data->getId(); ?></td>
+                </tr>
+                <tr>
+                    <td>Ação</td>
+                    <td>
+                        <a class="btn btn-warning"
+                           href="<?= \$this->url('$endPath', ['action' => 'edit', 'id' => \$this->data->getId()]); ?>">
+                            Editar
+                        </a>
+                    </td>
+                </tr>
 
-                </table>
-            </div>
+                </tbody>
+
+            </table>
         </div>
     </div>
-    <br clear="all"/><br/><br/><br/><br/><br/><br/>
-{% endblock %}
+</div>
+<br clear="all"/><br/><br/><br/><br/><br/><br/>
 EOL;
 
     file_put_contents($viewContentDestination, $viewContent);
