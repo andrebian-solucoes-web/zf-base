@@ -1,0 +1,53 @@
+<?= $this->doctype() ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?= $this->headTitle('ZF Base')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?= $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <?php
+        $robots = 'none';
+        if ($this->isProd()) {
+            $robots = 'all';
+        }
+        ?>
+
+        <meta name="robots" content="<?= $robots; ?>">
+
+        <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700" rel="stylesheet">
+
+        <!-- Le styles -->
+        <?= $this->headLink([
+            'rel' => 'shortcut icon',
+            'type' => 'image/vnd.microsoft.icon',
+            'href' => $this->basePath() . '/img/favicon.ico'
+        ])
+            ->prependStylesheet($this->basePath('css/style.css'))
+            ->prependStylesheet($this->basePath('css/custom.css'))
+            ->prependStylesheet($this->basePath('css/admin/bootstrap.min.css'))
+            ->prependStylesheet($this->basePath('font/font-awesome/css/font-awesome.min.css'));
+        ?>
+
+        <!-- Scripts -->
+        <?= $this->headScript()
+            ->appendFile($this->basePath('js/main.js'))
+            ->prependFile($this->basePath('js/jquery-mask-plugin.min.js'))
+            ->prependFile($this->basePath('js/admin/bootstrap.min.js'))
+            ->prependFile($this->basePath('js/jquery.min.js'))
+            ->prependFile($this->basePath('js/sweet-alert.js'));
+        ?>
+    </head>
+
+    <body>
+
+        <?= $this->partial('flash-messages'); ?>
+        <?= $this->content; ?>
+        <?= $this->inlineScript(); ?>
+
+    </body>
+</html>

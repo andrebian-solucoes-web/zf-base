@@ -19,19 +19,24 @@ class LoadUser implements FixtureInterface, OrderedFixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $admin = $manager->getRepository(Role::class)
-            ->findOneBy([
-                'name' => 'Admin'
+        $data = json_decode(file_get_contents(__DIR__ . '/../../data/logins.json'), true);
+
+        foreach ($data as $d) {
+            $role = $manager->getRepository(Role::class)
+                ->findOneBy([
+                    'name' => $d['role']
+                ]);
+
+            $user = new User([
+                'name' => $d['name'],
+                'username' => $d['username'],
+                'password' => $d['password'],
+                'role' => $role
             ]);
 
-        $user = new User([
-            'name' => 'Admin',
-            'username' => 'admin@site.com',
-            'password' => 'admin123',
-            'role' => $admin
-        ]);
+            $manager->persist($user);
+        }
 
-        $manager->persist($user);
         $manager->flush();
     }
 

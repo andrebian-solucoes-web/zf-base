@@ -11,14 +11,12 @@ use Zend\Validator\AbstractValidator;
 class NameAndLastName extends AbstractValidator
 {
     const INVALID = 'nameAndLastNameInvalid';
-
     /**
      * @var array
      */
     protected $messageTemplates = [
         self::INVALID => "Please provide your name and last name",
     ];
-
 
     /**
      * @inheritdoc
@@ -27,11 +25,9 @@ class NameAndLastName extends AbstractValidator
     {
         $words = explode(' ', $value);
         $valid = count($words) > 1;
-
         if (! $valid) {
-            $this->abstractOptions['messages'][self::INVALID] = $this->messageTemplates[self::INVALID];
+            $this->error(self::INVALID);
         }
-
         return $valid;
     }
 }

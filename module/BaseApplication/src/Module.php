@@ -3,7 +3,6 @@
 namespace BaseApplication;
 
 use BaseApplication\Mail\Mail;
-use BaseApplication\Route\PublicRoutes;
 use BaseApplication\View\Helper\AuthUserViewHelper;
 use BaseApplication\View\Helper\BrazilianStateHelperComboViewHelper;
 use BaseApplication\View\Helper\CPFMaskViewHelper;
@@ -11,14 +10,13 @@ use BaseApplication\View\Helper\CpfViewHelper;
 use BaseApplication\View\Helper\JsonDecodeViewHelper;
 use BaseApplication\View\Helper\PhpVersionViewHelper;
 use BaseApplication\View\Helper\ProductionEnvViewHelper;
+use BaseApplication\View\Helper\RefererViewHelper;
+use BaseApplication\View\Helper\S3ViewHelper;
 use BaseApplication\View\Helper\SlugifyViewHelper;
 use Exception;
-use User\Assets\SessionNamespace;
-use Zend\Authentication\AuthenticationService;
-use Zend\Authentication\Storage\Session;
+use Zend\Cache\StorageFactory;
+use Zend\Mail\Transport\Sendmail;
 use Zend\ModuleManager\ModuleManager;
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\Mvc\MvcEvent;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -40,7 +38,7 @@ class Module
             'factories' => [
                 Mail::class => function (ServiceManager $serviceManager) {
                     $emailConfig = $serviceManager->get('config')['mail'];
-                    $transport = $serviceManager->get('SendGridTransport');
+                    $transport = new Sendmail();
 
                     try {
                         $renderer = $serviceManager->get('ViewRenderer');
@@ -49,6 +47,22 @@ class Module
                     }
 
                     return new Mail($transport, $emailConfig, $renderer, 'contact');
+                },
+                'cache' => function (ServiceManager $serviceManager) {
+                    $config = $serviceManager->get('config')['cache'];
+                    $cache = StorageFactory::factory([
+                        'adapter' => $config['adapter'],
+                        'options' => [
+                            'ttl' => $config['ttl']
+                        ],
+                        'plugins' => [
+                            'exception_handler' => [
+                                'throw_exceptions' => $config['throw_exceptions']
+                            ],
+                            'serializer'
+                        ]
+                    ]);
+                    return $cache;
                 }
             ]
         ];
@@ -65,9 +79,12 @@ class Module
                 'user' => AuthUserViewHelper::class,
                 'authUser' => AuthUserViewHelper::class,
                 'isProductionEnv' => ProductionEnvViewHelper::class,
+                'isProd' => ProductionEnvViewHelper::class,
                 'phpversion' => PhpVersionViewHelper::class,
                 'cpfMask' => CPFMaskViewHelper::class,
-                'cpf' => CpfViewHelper::class
+                'cpf' => CpfViewHelper::class,
+                's3Url' => S3ViewHelper::class,
+                'referer' => RefererViewHelper::class
             ]
         ];
     }

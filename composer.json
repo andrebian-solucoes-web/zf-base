@@ -24,11 +24,11 @@
         "zendframework/zend-session": "^2.7.1",
         "zendframework/zend-servicemanager-di": "^1.0",
         "doctrine/doctrine-orm-module": "*",
-        "oxcom/zend-twig": "^0.1.2",
         "kevinlebrun/slug.php": "@stable",
         "andrebian/brazilian-helpers": "*",
         "andrebian/sendgrid-transport-module": "*",
-        "zendframework/zend-mail": "^2.7"
+        "zendframework/zend-mail": "^2.7",
+        "phpoffice/phpexcel": "^1.8"
     },
     "require-dev": {
         "zendframework/zend-developer-tools": "^1.1.0",
@@ -37,7 +37,8 @@
         "dkorsak/doctrine-data-fixture-module": "*",
         "zfcampus/zf-development-mode": "^3.0",
         "doctrine/migrations": "^1.5",
-        "squizlabs/php_codesniffer": "3.*"
+        "squizlabs/php_codesniffer": "3.*",
+        "phpstan/phpstan": "^0.11.15"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

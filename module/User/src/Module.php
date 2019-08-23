@@ -7,6 +7,8 @@ use User\Assets\SessionNamespace;
 use User\Auth\Adapter;
 use User\Service\PasswordRecoveryService;
 use User\Service\UserService;
+use User\View\Helper\ProfilePictureViewHelper;
+use User\View\Helper\ProfilePictureViewHelperFactory;
 use User\View\Helper\UserIdentityViewHelper;
 use Zend\Authentication\AuthenticationService;
 use Zend\Authentication\Storage\Session;
@@ -37,8 +39,8 @@ class Module implements DependencyIndicatorInterface
             'factories' => [
                 Adapter::class => function (ServiceManager $serviceManager) {
                     $entityManager = $serviceManager->get(EntityManager::class);
-
-                    return new Adapter($entityManager);
+                    $ttl = $serviceManager->get('config')['session']['lifetime'];
+                    return new Adapter($entityManager, $ttl);
                 },
                 UserService::class => function (ServiceManager $serviceManager) {
                     return new UserService($serviceManager);
@@ -56,8 +58,14 @@ class Module implements DependencyIndicatorInterface
             'invokables' => [
                 'userIdentity' => UserIdentityViewHelper::class,
                 'user' => UserIdentityViewHelper::class,
-                'authUser' => UserIdentityViewHelper::class,
-            ]
+                'authUser' => UserIdentityViewHelper::class
+            ],
+            'aliases' => [
+                'profilePicture' => ProfilePictureViewHelper::class
+            ],
+            'factories' => [
+                ProfilePictureViewHelper::class => ProfilePictureViewHelperFactory::class
+            ],
         ];
     }
 

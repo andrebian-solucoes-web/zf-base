@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace User\Entity;
 
@@ -15,6 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class User extends AbstractApplicationEntity
 {
+    const PROFILE = 'admin';
+
     /**
      * @var string
      *
@@ -25,7 +27,7 @@ class User extends AbstractApplicationEntity
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=255, nullable=false)
+     * @ORM\Column(name="username", type="string", length=100, nullable=false)
      */
     private $username;
 
@@ -61,6 +63,12 @@ class User extends AbstractApplicationEntity
      * @ORM\JoinColumn(name="role_id", referencedColumnName="id")
      */
     private $role;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", length=500, nullable=true)
+     */
+    private $pushToken;
 
     /**
      * @return string
@@ -218,5 +226,39 @@ class User extends AbstractApplicationEntity
     {
         $this->passwordRecoveries = new ArrayCollection();
         parent::__construct($data);
+    }
+
+    /**
+     * @return string
+     */
+    public function getNome()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getProfile(): string
+    {
+        return 'admin';
+    }
+
+    /**
+     * @param string|null $pushToken
+     * @return $this
+     */
+    public function setPushToken(?string $pushToken)
+    {
+        $this->pushToken = $pushToken;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPushToken(): ?string
+    {
+        return $this->pushToken;
     }
 }

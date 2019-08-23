@@ -1,0 +1,34 @@
+<?php $loggedUser = $this->userIdentity(); ?>
+<aside class="main-sidebar">
+    <section class="sidebar">
+        <div class="user-panel">
+            <div class="pull-left image">
+                <img src="/files/avatar/<?= $loggedUser['id']; ?>/<?= $loggedUser['avatar']; ?>"
+                     class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                <p>
+                    <?php
+                        $name = $loggedUser['name'];
+                        $name = explode(' ', $name);
+                        echo $name[0];
+                    ?>
+                </p>
+                <a href="<?= $this->url('admin-logout'); ?>"><?= $this->translate('Sign out'); ?></a>
+            </div>
+        </div>
+        <ul class="sidebar-menu" data-widget="tree">
+            <li class="header"><?= $this->translate('MAIN NAVIGATION'); ?></li>
+            <li class="active">
+                <a href="<?= $this->url('admin'); ?>">
+                    <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?= $this->url('admin-user'); ?>">
+                    <i class="fa fa-user"></i> <span>Usuários do sistema</span>
+                </a>
+            </li>
+        </ul>
+    </section>
+</aside>

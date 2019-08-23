@@ -12,6 +12,16 @@ use User\Entity\User;
  */
 class UserService extends BaseService
 {
+    public function save(array $data, $isTest = false)
+    {
+        if ($this->isEmailInUse($data)) {
+            $this->errors = ['username' => ['E-mail já cadastrado']];
+            return false;
+        }
+
+        return parent::save($data, $isTest);
+    }
+
     /**
      * @param $userId
      * @return bool
@@ -51,5 +61,23 @@ class UserService extends BaseService
         }
 
         return '';
+    }
+
+    /**
+     * @param array $data
+     * @return bool
+     */
+    private function isEmailInUse(array $data)
+    {
+        $email = $data['username'];
+
+        $exists = $this->entityManager->getRepository(User::class)
+            ->findOneBy(['username' => $email]);
+
+        if ($exists && isset($data['id']) && $data['id'] != $exists->getId()) {
+            return true;
+        }
+
+        return false;
     }
 }

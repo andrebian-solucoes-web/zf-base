@@ -8,7 +8,7 @@
 
 namespace Test\User\Controller;
 
-use User\Controller\AdminUserController;
+use User\Controller\Admin\UserController as AdminUserController;
 use Zend\Stdlib\ArrayUtils;
 use Zend\Test\PHPUnit\Controller\AbstractHttpControllerTestCase;
 
@@ -43,11 +43,10 @@ class AdminUserControllerTest extends AbstractHttpControllerTestCase
 //        $serviceManager->setService(EntityManager::class, $entityManager);
     }
 
-    public function testIndexAction()
+    public function testIndexActionUnathenticated()
     {
-        $this->markTestIncomplete('Complete this test');
-        $this->dispatch('/admin/user', 'GET');
-        $this->assertResponseStatusCode(200);
+        $this->dispatch('/admin/user/index', 'GET');
+        $this->assertResponseStatusCode(302);
         $this->assertModuleName('User');
         $this->assertControllerName(AdminUserController::class);
         $this->assertMatchedRouteName('admin-user');

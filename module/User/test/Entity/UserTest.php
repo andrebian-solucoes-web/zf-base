@@ -31,7 +31,7 @@ class UserTest extends TestCase
         $entity->setName('1');
         $entity->setPassword('11231321');
         $entity->setLastLogin(new DateTime());
-        $entity->setAvatar('12345.jpg');
+        $entity->setAvatar('12345.png');
         $entity->setUsername('1');
         $entity->setId('1');
         $entity->setCreated(new DateTime());

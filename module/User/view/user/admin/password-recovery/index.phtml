@@ -1,0 +1,31 @@
+<?php $this->headTitle('Recuperação de senha'); ?>
+
+<div class="login-box-body">
+    <p class="login-box-msg">Informe seu e-mail para recuperar a senha</p>
+
+    <form method="post" enctype="application/x-www-form-urlencoded">
+        <div class="form-group has-feedback">
+            <input type="email" name="email" class="form-control material"
+                   placeholder="Informe seu e-mail">
+            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            <?php if (isset($this->errorMessages['email'])) : ?>
+                <br/>
+                <?php foreach ($this->errorMessages['email'] as $errorMessage) : ?>
+                    <?= $this->translate($errorMessage); ?><br/>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <button type="submit" class="btn btn-primary btn-block btn-flat">Recuperar senha</button>
+            </div>
+        </div>
+        <?php if (isset($this->errorMessages['invalidEmail'])) : ?>
+            <br/>
+            <div class="alert alert-danger">
+                <?= $this->translate($this->errorMessages['invalidEmail']); ?><br/>
+            </div>
+        <?php endif; ?>
+    </form>
+    <a href="<?= $this->url('admin-login'); ?>">Retornar ao login</a><br>
+</div>

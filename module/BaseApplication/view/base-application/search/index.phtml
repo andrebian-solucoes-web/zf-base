@@ -1,0 +1,19 @@
+<?php
+if (isset($this->result['title'])) {
+    $this->headTitle($this->result['title']);
+}
+?>
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">{{ result.title }}</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <?php $total = isset($this->result['data']) ? count($this->result['data']) : 0; ?>
+        <?= $total; ?>&nbsp;
+        <?= $this->translate('results found'); ?>
+        <?= $this->partial('flash-messages'); ?>
+    </div>
+</div>

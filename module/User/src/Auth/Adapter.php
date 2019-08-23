@@ -3,10 +3,12 @@
 namespace User\Auth;
 
 use Doctrine\ORM\EntityManager;
+use User\Assets\SessionNamespace;
 use User\Entity\User;
 use User\Repository\UserRepository;
 use Zend\Authentication\Adapter\AdapterInterface;
 use Zend\Authentication\Result;
+use Zend\Session\Container;
 
 /**
  * Class Adapter
@@ -30,13 +32,19 @@ class Adapter implements AdapterInterface
     private $password;
 
     /**
-     * Adapter constructor.
-     *
-     * @param EntityManager $entityManager
+     * @var int
      */
-    public function __construct(EntityManager $entityManager)
+    private $ttl;
+
+    /**
+     * Adapter constructor.
+     * @param EntityManager $entityManager
+     * @param int $ttl
+     */
+    public function __construct(EntityManager $entityManager, $ttl = 3600)
     {
         $this->entityManager = $entityManager;
+        $this->ttl = $ttl;
     }
 
     /**
@@ -107,6 +115,10 @@ class Adapter implements AdapterInterface
             $resultCode = Result::SUCCESS;
             $identity = ['user' => $userData];
             $resultText = ['Ok'];
+
+            (new Container(SessionNamespace::NAME))
+                ->getManager()
+                ->rememberMe($this->ttl);
         }
 
         return new Result($resultCode, $identity, $resultText);

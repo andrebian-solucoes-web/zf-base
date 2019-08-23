@@ -29,97 +29,93 @@ class UserFormFilter implements InputFilterAwareInterface
 
     public function getInputFilter()
     {
-        if (! $this->inputFilter) {
-            $inputFilter = new InputFilter();
+        $inputFilter = new InputFilter();
 
-            $inputFilter->add([
-                'name' => 'id',
-                'required' => false,
-                'filters' => [
-                    ['name' => StripTags::class],
-                    ['name' => StringTrim::class],
-                    ['name' => ToInt::class]
-                ],
-            ]);
+        $inputFilter->add([
+            'name' => 'id',
+            'required' => false,
+            'filters' => [
+                ['name' => StripTags::class],
+                ['name' => StringTrim::class],
+                ['name' => ToInt::class]
+            ],
+        ]);
 
-            $inputFilter->add([
-                'name' => 'name',
-                'required' => true,
-                'filters' => [
-                    ['name' => StripTags::class],
-                    ['name' => StringTrim::class],
-                ],
-                'validators' => [
-                    [
-                        'name' => StringLength::class,
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min' => 1,
-                            'max' => 255,
-                        ],
+        $inputFilter->add([
+            'name' => 'name',
+            'required' => true,
+            'filters' => [
+                ['name' => StripTags::class],
+                ['name' => StringTrim::class],
+            ],
+            'validators' => [
+                [
+                    'name' => StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 1,
+                        'max' => 255,
                     ],
                 ],
-            ]);
+            ],
+        ]);
 
-            $inputFilter->add([
-                'name' => 'username',
-                'required' => true,
-                'filters' => [
-                    ['name' => StripTags::class],
-                    ['name' => StringTrim::class],
-                ],
-                'validators' => [
-                    [
-                        'name' => StringLength::class,
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min' => 1,
-                            'max' => 255,
-                        ],
+        $inputFilter->add([
+            'name' => 'username',
+            'required' => true,
+            'filters' => [
+                ['name' => StripTags::class],
+                ['name' => StringTrim::class],
+            ],
+            'validators' => [
+                [
+                    'name' => StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 1,
+                        'max' => 255,
                     ],
                 ],
-            ]);
+            ],
+        ]);
 
-            $inputFilter->add([
-                'name' => 'password',
-                'required' => false,
-                'filters' => [
-                    ['name' => StripTags::class],
-                    ['name' => StringTrim::class],
-                ],
-                'validators' => [
-                    [
-                        'name' => StringLength::class,
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min' => 6
-                        ],
+        $inputFilter->add([
+            'name' => 'password',
+            'required' => false,
+            'filters' => [
+                ['name' => StripTags::class],
+                ['name' => StringTrim::class],
+            ],
+            'validators' => [
+                [
+                    'name' => StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 6
                     ],
                 ],
-            ]);
+            ],
+        ]);
 
-            $inputFilter->add([
-                'name' => 'avatar',
-                'required' => false,
-                'filters' => [
-                    ['name' => StripTags::class],
-                    ['name' => StringTrim::class],
-                ],
-                'validators' => [
-                    [
-                        'name' => StringLength::class,
-                        'options' => [
-                            'encoding' => 'UTF-8',
-                            'min' => 1,
-                            'max' => 255
-                        ],
+        $inputFilter->add([
+            'name' => 'avatar',
+            'required' => false,
+            'filters' => [
+                ['name' => StripTags::class],
+                ['name' => StringTrim::class],
+            ],
+            'validators' => [
+                [
+                    'name' => StringLength::class,
+                    'options' => [
+                        'encoding' => 'UTF-8',
+                        'min' => 1,
+                        'max' => 255
                     ],
                 ],
-            ]);
+            ],
+        ]);
 
-            $this->inputFilter = $inputFilter;
-        }
-
-        return $this->inputFilter;
+        return $inputFilter;
     }
 }

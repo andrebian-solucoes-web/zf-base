@@ -1,0 +1,44 @@
+[
+  {
+    "role": "Admin",
+    "name": "Admin",
+    "username": "admin@neodent.com.br",
+    "password": "Admin@2019"
+  },
+  {
+    "role": "Marketing",
+    "name": "José Guilherme Pamplona",
+    "username": "jose.pamplona@neodent.com",
+    "password": "mudar123"
+  },
+  {
+    "role": "Marketing",
+    "name": "Vinicius Oliveira",
+    "username": "vinicius.oliveira@straumann.com",
+    "password": "mudar123"
+  },
+  {
+    "role": "Diretoria",
+    "name": "Tania Able",
+    "username": "tania.able@neodent.com",
+    "password": "mudar123"
+  },
+  {
+    "role": "Comercial",
+    "name": "Romulo Tavares",
+    "username": "romulo.tavares@neodent.com",
+    "password": "mudar123"
+  },
+  {
+    "role": "Comercial",
+    "name": "Felipe Farias",
+    "username": "felipe.farias@neodent.com",
+    "password": "mudar123"
+  },
+  {
+    "role": "Marketing",
+    "name": "Luiz Franken",
+    "username": "luiz.franken@neodent.com",
+    "password": "mudar123"
+  }
+]

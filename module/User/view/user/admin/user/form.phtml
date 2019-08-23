@@ -1,0 +1,61 @@
+<?php /** @var \User\Form\UserForm $form */
+$form = $this->form; ?>
+<form method="post" enctype="application/x-www-form-urlencoded" role="form">
+    <?= $this->formElement($form->get('id')); ?>
+
+    <div class="form-group">
+        <?= $this->formLabel($form->get('name')); ?>
+        <?= $this->formElement($form->get('name')); ?>
+        <?php if (isset($this->errorMessages['name'])) : ?>
+            <div class="has-error">
+                <?php foreach ($this->errorMessages['name'] as $errorMessage) : ?>
+                    <?= $this->translate($errorMessage); ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <div class="form-group">
+        <?= $this->formLabel($form->get('username')); ?>
+        <?= $this->formElement($form->get('username')); ?>
+        <?php if (isset($this->errorMessages['username'])) : ?>
+            <div class="has-error">
+                <?php foreach ($this->errorMessages['username'] as $errorMessage) : ?>
+                    <?= $this->translate($errorMessage); ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <div class="form-group">
+        <?= $this->formLabel($form->get('password')); ?>
+        <?= $this->formElement($form->get('password')); ?>
+        <?php if (isset($this->errorMessages['password'])) : ?>
+            <div class="has-error">
+                <?php foreach ($this->errorMessages['password'] as $errorMessage) : ?>
+                    <?= $this->translate($errorMessage); ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <div class="form-group">
+        <?= $this->formLabel($form->get('avatar')); ?>
+        <?= $this->formElement($form->get('avatar')); ?>
+        <?php if (isset($this->errorMessages['avatar'])) : ?>
+            <div class="has-error">
+                <?php foreach ($this->errorMessages['avatar'] as $errorMessage) : ?>
+                    <?= $this->translate($errorMessage); ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <div class="form-group">
+        <small>Os campos com <strong>*</strong> são de preenchimento obrigatório.</small>
+    </div>
+
+    <div class="form-group">
+        <?= $this->formSubmit($form->get('submit')); ?>
+    </div>
+</form>

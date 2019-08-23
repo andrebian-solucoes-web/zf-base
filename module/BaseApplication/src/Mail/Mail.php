@@ -227,7 +227,8 @@ class Mail
         if (count($this->attachments) > 0) {
             $mimeMessage = $this->message->getBody();
             if (! $mimeMessage instanceof MimeMessage) {
-                $this->setBody(new MimePart($mimeMessage));
+                //TODO: Bypass to discover how treat this
+                //$this->setBody(new MimePart($mimeMessage));
                 $mimeMessage = $this->message->getBody();
             }
 

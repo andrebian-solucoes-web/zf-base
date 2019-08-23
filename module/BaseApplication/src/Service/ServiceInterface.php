@@ -32,4 +32,9 @@ interface ServiceInterface
      * @return mixed
      */
     public function activate($id);
+
+    /**
+     * @return array
+     */
+    public function getErrors();
 }

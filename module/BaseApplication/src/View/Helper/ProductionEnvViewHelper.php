@@ -29,6 +29,13 @@ class ProductionEnvViewHelper extends AbstractHelper
             return false;
         }
 
+        if (file_exists(__DIR__ . '/../../../../../config/autoload/local.php')) {
+            $local = require __DIR__ . '/../../../../../config/autoload/local.php';
+            if (isset($local['env']) && $local['env'] != 'prod') {
+                return false;
+            }
+        }
+
         return true;
     }
 }

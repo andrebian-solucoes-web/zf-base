@@ -37,6 +37,13 @@ class PublicRoutes
             }
         }
 
+        $consoleRoutes = $config['console']['router']['routes'];
+        foreach ($consoleRoutes as $routeName => $routeConfig) {
+            if (isset($routeConfig['public']) && $routeConfig['public'] === true) {
+                $publicRoutes[] = $routeName;
+            }
+        }
+
         return $publicRoutes;
     }
 }

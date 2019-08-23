@@ -7,7 +7,7 @@ use Zend\Form\Element\File;
 use Zend\Form\Element\Hidden;
 use Zend\Form\Element\Password;
 use Zend\Form\Element\Submit;
-use Zend\Form\Element\Textarea;
+use Zend\Form\Element\Text;
 use Zend\Form\Form;
 
 /**
@@ -27,48 +27,46 @@ class UserForm extends Form
 
         $this->add([
             'name' => 'id',
-            'options' => [
-                'type' => Hidden::class
-            ]
+            'type' => Hidden::class
         ]);
 
         $this->add([
             'name' => 'name',
+            'type' => Text::class,
             'options' => [
-                'type' => Textarea::class,
-                'label' => 'Name'
+                'label' => 'Nome Completo *'
             ],
             'attributes' => [
                 'class' => 'form-control',
                 'id' => 'name',
-                'placeholder' => 'Type your name',
+                'placeholder' => 'Nome Completo',
                 'autocomplete' => 'Off'
             ]
         ]);
 
         $this->add([
             'name' => 'username',
+            'type' => Email::class,
             'options' => [
-                'type' => Email::class,
-                'label' => 'Email'
+                'label' => 'Email *'
             ],
             'attributes' => [
                 'class' => 'form-control',
                 'id' => 'email',
-                'placeholder' => 'Type your email',
+                'placeholder' => 'email@dominio.com.br',
                 'autocomplete' => 'Off'
             ]
         ]);
 
         $this->add([
             'name' => 'password',
+            'type' => Password::class,
             'options' => [
-                'type' => Password::class,
-                'label' => 'Password'
+                'label' => 'Senha *'
             ],
             'attributes' => [
                 'id' => 'password',
-                'placeholder' => 'Type your password',
+                'placeholder' => 'Informe a senha',
                 'class' => 'form-control',
                 'autocomplete' => 'off'
             ]
@@ -76,13 +74,12 @@ class UserForm extends Form
 
         $this->add([
             'name' => 'avatar',
+            'type' => File::class,
             'options' => [
-                'type' => File::class,
-                'label' => 'Avatar'
+                'label' => 'Imagem de perfil'
             ],
             'attributes' => [
                 'id' => 'avatar',
-                'placeholder' => 'Set your avatar',
                 'class' => 'form-control',
             ]
         ]);
@@ -95,7 +92,7 @@ class UserForm extends Form
             ],
             'attributes' => [
                 'value' => 'Save',
-                'class' => 'btn btn-danger'
+                'class' => 'btn btn-primary'
             ]
         ]);
     }

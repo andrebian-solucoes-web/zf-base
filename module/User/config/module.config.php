@@ -3,9 +3,9 @@
 namespace User;
 
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
-use User\Controller\AdminAuthController;
-use User\Controller\AdminPasswordRecoveryController;
-use User\Controller\AdminUserController;
+use User\Controller\Admin\AuthController as AdminAuthController;
+use User\Controller\Admin\PasswordRecoveryController as AdminPasswordRecoveryController;
+use User\Controller\Admin\UserController as AdminUserController;
 use User\Controller\AuthController;
 use User\Controller\PasswordRecoveryController;
 use Zend\I18n\Translator\TranslatorServiceFactory;

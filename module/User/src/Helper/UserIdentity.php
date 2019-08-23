@@ -30,4 +30,18 @@ class UserIdentity
 
         return $response;
     }
+
+    /**
+     * @param $namespace
+     * @return bool
+     */
+    public function hasIdentity($namespace)
+    {
+        $sessionStorage = new SessionStorage($namespace);
+        $authService = new AuthenticationService();
+
+        $authService->setStorage($sessionStorage);
+
+        return $authService->hasIdentity();
+    }
 }

@@ -46,3 +46,11 @@ msgstr "Sair"
 msgid "Logout"
 msgstr "Sair"
 
+msgid "name"
+msgstr "Nome"
+
+msgid "username"
+msgstr "E-mail"
+
+msgid "password"
+msgstr "Senha"

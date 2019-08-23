@@ -1,0 +1,113 @@
+<?php
+/** @var \User\Entity\User $user */
+$user = $this->user;
+/** @var \User\Form\UserForm $form */
+$form = $this->form;
+$loggedUserContents = $this->userIdentity();
+?>
+<div class="content-wrapper">
+    <?= $this->partial('flash-messages'); ?>
+    <section class="content-header">
+        <h1>Perfil</h1>
+        <ol class="breadcrumb">
+            <li><a href="<?= $this->url('admin'); ?>"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="active">Perfil</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="box box-primary">
+                    <div class="box-body box-profile">
+                        <img class="profile-user-img img-responsive img-circle"
+                             src="/files/avatar/<?= $user->getId(); ?>/<?= $user->getAvatar(); ?>"
+                             alt="User profile picture">
+                        <h3 class="profile-username text-center"><?= $loggedUserContents['name']; ?></h3>
+                        <ul class="list-group list-group-unbordered">
+                            <li class="list-group-item">
+                                <b>Último Login</b>
+                                <span class="pull-right">
+                                    <?php if (isset($loggedUserContents['previous_last_login'])) : ?>
+                                        <?= $loggedUserContents['previous_last_login']->format('d/m H:i'); ?>
+                                    <?php endif; ?>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#settings" data-toggle="tab">
+                                Detalhes
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="active tab-pane" id="settings">
+                            <form class="form-horizontal" method="post" enctype="multipart/form-data"
+                                  autocomplete="off">
+                                <?= $this->formHidden($form->get('id')); ?>
+                                <div class="form-group">
+                                    <label for="inputName"
+                                           class="col-sm-2 control-label">
+                                        <?= $this->translate($form->get('name')->getLabel()); ?>
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <?= $this->formElement($form->get('name')); ?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputName"
+                                           class="col-sm-2 control-label">
+                                        <?= $this->translate($form->get('username')->getLabel()); ?>
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <?= $this->formElement($form->get('username')); ?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputName"
+                                           class="col-sm-2 control-label">
+                                        <?= $this->translate($form->get('avatar')->getLabel()); ?>
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <?= $this->formFile($form->get('avatar')); ?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-10 col-md-offset-2">
+                                        <a href="#" onclick="$('.new-password').toggleClass('hidden'); return false;">
+                                            <?= $this->translate('Change password'); ?>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="form-group new-password hidden">
+                                    <label for="inputName"
+                                           class="col-sm-2 control-label">
+                                        <?= $this->translate('New'); ?>&nbsp;
+                                        <?= $this->translate($form->get('password')->getLabel()); ?>
+                                    </label>
+                                    <div class="col-sm-10">
+                                        <?= $this->formElement($form->get('password')); ?>
+                                        <small>
+                                            <?= $this->translate('Fill just if you want to change your password'); ?>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <?= $this->formSubmit($form->get('submit')); ?>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

@@ -27,6 +27,11 @@ abstract class BaseService implements ServiceInterface
     protected $serviceManager;
 
     /**
+     * @var array
+     */
+    protected $errors = [];
+
+    /**
      * @var ApplicationEntityInterface
      */
     protected $entity;
@@ -122,6 +127,14 @@ abstract class BaseService implements ServiceInterface
         $this->entityManager->flush();
 
         return $entity;
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
     }
 
     /**

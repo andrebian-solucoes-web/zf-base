@@ -1,0 +1,99 @@
+<?php $this->headTitle('Usuários Inativos'); ?>
+<div class="content-wrapper">
+    <section class="content-header">
+        <h1>
+            Usuários Inativos
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+            <li class="active">Usuários Inativos</li>
+        </ol>
+    </section>
+
+    <section class="content">
+        <div class="row">
+            <div class="col-md-12">
+                <?= $this->partial('flash-messages'); ?>
+                <div class="box">
+                    <div class="box-header">
+                        <a href="<?= $this->url('admin-user', ['action' => 'add']); ?>"
+                           class="btn btn-success">
+                            <i class="fa fa-plus"></i>&nbsp;Incluir
+                        </a>&nbsp;
+                        <a href="<?= $this->url('admin-user'); ?>"
+                           class="btn btn-primary">
+                            Ver Ativos
+                        </a>&nbsp;
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Imagem de perfil</th>
+                                <th>Último Login</th>
+                                <th style="width: 15%;">Ações</th>
+                            </tr>
+                            <?php /** @var \User\Entity\User $user */
+                            foreach ($this->collection as $user) : ?>
+                                <tr>
+                                    <td><?= $user->getName(); ?></td>
+                                    <td><?= $user->getUsername(); ?></td>
+                                    <td>
+                                        <?php $imagem = '/img/admin/avatar5.png'; ?>
+                                        <?php if ($user->getAvatar() != '') : ?>
+                                            <?php
+                                            $imagem = '/files/avatar/' . $user->getId() . '/';
+                                            $imagem .= $user->getAvatar();
+                                            ?>
+                                        <?php endif; ?>
+                                        <img src="<?= $imagem; ?>" width="48">
+                                    </td>
+                                    <td>
+                                        <?php if ($user->getLastLogin()) : ?>
+                                            <?= $user->getLastLogin()->format('d/m/Y H:i'); ?>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <?php if ($user->getId() !== 1) : ?>
+                                            <?php $reactivateParams = [
+                                                'action' => 'activate',
+                                                'id' => $user->getId()
+                                            ]; ?>
+
+                                            <a href="#" class="btn btn-xs btn-success btn-sm icon icon-left delete-link"
+                                               id="<?= $user->getId(); ?>">
+                                                <i class="fa fa-refresh"></i>&nbsp;
+                                                Restaurar
+                                            </a>
+
+                                            <div style="display: none;">
+                                                <form action="<?= $this->url('admin-user', $reactivateParams); ?>"
+                                                      method="post">
+                                                    <input type="submit" id="delete-<?= $user->getId(); ?>"
+                                                           class="btn btn-success btn-sm btn-icon icon-left"
+                                                           value="Ativar">
+                                                </form>
+                                            </div>
+                                        <?php else : ?>
+                                            ---
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+
+                    <div class="box-footer clearfix">
+                        <?php if ($this->collection->count() > 0) : ?>
+                            <?= $this->paginationControl($this->collection, 'Sliding', 'admin/pagination'); ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>

@@ -1,16 +1,10 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: andrebian
- * Date: 15/06/18
- * Time: 00:01
- */
 
 namespace Test\User\Controller;
 
 use Doctrine\ORM\EntityManager;
 use Mockery;
-use User\Controller\AdminPasswordRecoveryController;
+use User\Controller\Admin\PasswordRecoveryController as AdminPasswordRecoveryController;
 use User\Entity\PasswordRecoveryToken;
 use User\Entity\User;
 use User\Service\PasswordRecoveryService;

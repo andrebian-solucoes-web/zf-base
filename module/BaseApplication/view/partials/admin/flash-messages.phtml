@@ -1,0 +1,87 @@
+<?php
+
+//$openFormat = '<div%s>'
+//    . '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'
+//    . '<div>';
+
+/** @var Zend\Mvc\Plugin\FlashMessenger\View\Helper\FlashMessenger $flash */
+$flash = $this->flashMessenger();
+//$flash->setMessageOpenFormat($openFormat);
+//$flash->setMessageCloseString('</div></div>');
+
+//echo $flash->render('error', [
+//    'alert',
+//    'alert-danger',
+//    'alert-dismissible',
+//    'bg-danger',
+//    'text-white',
+//    'border-0',
+//    'show',
+//]);
+
+$flashError = $flash->getPluginFlashMessenger()->getMessagesFromNamespace('error');
+$errorMessage = '';
+foreach ($flashError as $message) {
+    $errorMessage .= $message . ' ';
+}
+if ($errorMessage != '') {
+    echo '<script>swal("Erro", "' . $errorMessage . '", "error")</script>';
+}
+
+//echo $flash->render('info', [
+//    'alert',
+//    'alert-info',
+//    'alert-dismissible',
+//    'bg-info',
+//    'text-white',
+//    'border-0',
+//    'show',
+//]);
+
+$flashInfo = $flash->getPluginFlashMessenger()->getMessagesFromNamespace('info');
+$infoMessage = '';
+foreach ($flashInfo as $message) {
+    $infoMessage .= $message . ' ';
+}
+if ($infoMessage != '') {
+    echo '<script>swal("Informação", "' . $infoMessage . '", "info")</script>';
+}
+
+//echo $flash->render('default', [
+//    'alert',
+//    'alert-secondary',
+//    'alert-dismissible',
+//    'bg-secondary',
+//    'text-white',
+//    'border-0',
+//    'show',
+//]);
+
+$flashDefault = $flash->getPluginFlashMessenger()->getMessagesFromNamespace('default');
+$defaultMessage = '';
+foreach ($flashDefault as $message) {
+    $defaultMessage .= $message . ' ';
+}
+if ($defaultMessage != '') {
+    echo '<script>swal("Informação", "' . $defaultMessage . '", "info")</script>';
+}
+
+
+//echo $flash->render('success', [
+//    'alert',
+//    'alert-dismissible',
+//    'alert-success',
+//    'bg-success',
+//    'text-white',
+//    'border-0',
+//    'show'
+//]);
+
+$flashSuccess = $flash->getPluginFlashMessenger()->getMessagesFromNamespace('success');
+$successMessage = '';
+foreach ($flashSuccess as $message) {
+    $successMessage .= $message . ' ';
+}
+if ($successMessage != '') {
+    echo '<script>swal("Sucesso", "' . $successMessage . '", "success")</script>';
+}

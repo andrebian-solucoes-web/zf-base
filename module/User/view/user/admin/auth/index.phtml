@@ -1,0 +1,42 @@
+<?php $this->headTitle('Login'); ?>
+<div class="login-box-body">
+    <p class="login-box-msg">Realize login para acessar o painel</p>
+
+    <form action="<?= $this->url('admin-login'); ?>" method="post" enctype="application/x-www-form-urlencoded">
+        <div class="form-group has-feedback">
+            <input id="email" type="email" name="email" class="form-control material"
+                   placeholder="Email">
+            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            <?php if (isset($this->errorMessages['email'])) : ?>
+                <br/>
+                <?php foreach ($this->errorMessages['email'] as $errorMessage) : ?>
+                    <?= $this->translate($errorMessage); ?><br/>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        <div class="form-group has-feedback">
+            <input type="password" name="password" class="form-control material" id="password"
+                   placeholder="Senha">
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            <?php if (isset($this->errorMessages['password'])) : ?>
+                <br/>
+                <?php foreach ($this->errorMessages['password'] as $errorMessage) : ?>
+                    <?= $this->translate($errorMessage); ?><br/>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <button type="submit" class="btn btn-primary btn-block btn-flat">Login</button>
+            </div>
+        </div>
+        <?php if (isset($this->errorMessages['invalidLogin'])) : ?>
+            <br/>
+            <div class="alert alert-danger">
+                <?= $this->translate($this->errorMessages['invalidLogin']); ?><br/>
+            </div>
+        <?php endif; ?>
+    </form>
+    <a href="<?= $this->url('admin-password-recovery'); ?>">Esqueci minha senha</a><br>
+</div>
+

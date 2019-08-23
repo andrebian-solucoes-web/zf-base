@@ -3,6 +3,7 @@
 namespace BaseApplication\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query;
 
 /**
@@ -46,8 +47,7 @@ abstract class AbstractApplicationRepository extends EntityRepository implements
     }
 
     /**
-     * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @return int
      */
     public function countActive()
     {
@@ -55,7 +55,29 @@ abstract class AbstractApplicationRepository extends EntityRepository implements
         /** @var Query $query */
         $query = $this->getEntityManager()
             ->createQuery('SELECT COUNT(u.id) FROM ' . $entityName . ' u WHERE u.active=true');
-        $count = $query->getSingleScalarResult();
+        try {
+            $count = $query->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+            $count = 0;
+        }
+
+        return $count;
+    }
+
+    /**
+     * @return int
+     */
+    public function countInactive()
+    {
+        $entityName = (string)$this->getEntityName();
+        /** @var Query $query */
+        $query = $this->getEntityManager()
+            ->createQuery('SELECT COUNT(u.id) FROM ' . $entityName . ' u WHERE u.active=false');
+        try {
+            $count = $query->getSingleScalarResult();
+        } catch (NonUniqueResultException $e) {
+            $count = 0;
+        }
 
         return $count;
     }
