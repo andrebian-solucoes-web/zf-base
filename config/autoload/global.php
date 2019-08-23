@@ -12,5 +12,11 @@
  */
 
 return [
-    // ...
+    'view_manager' => [
+        'display_not_found_reason' => true,
+        'display_exceptions' => false,
+    ],
+    'session' => [
+        'lifetime' => 3600 * 8, // Duração de 8h
+    ],
 ];

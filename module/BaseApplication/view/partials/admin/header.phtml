@@ -23,7 +23,9 @@
                             <p>
                                 <?= $loggedUser['name']; ?>
                                 <small><?= $this->translate('Last login'); ?>:
-                                    <?= $loggedUser['previous_last_login']->format('d/m H:i'); ?>
+                                    <?php if ($loggedUser['previous_last_login'] instanceof DateTime) : ?>
+                                        <?= $loggedUser['previous_last_login']->format('d/m H:i'); ?>
+                                    <?php endif; ?>
                                 </small>
                             </p>
                         </li>
