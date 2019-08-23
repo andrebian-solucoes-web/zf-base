@@ -31,7 +31,7 @@ trait SubmitFormTrait
         if (! $this instanceof Form) {
             throw new RuntimeException('Trait only useful with forms');
         }
-        
+
         $attributes = $this->get('submit')->getAttributes();
         $attributes['value'] = $value;
         $this->get('submit')->setAttributes($attributes);
