@@ -5,8 +5,14 @@ namespace BaseApplication;
 use BaseApplication\Controller\AdminIndexController;
 use BaseApplication\Controller\IndexController;
 use BaseApplication\Controller\SearchController;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
+
+$ormCacheEngine = 'array';
+if (defined('ORM_CACHE_ENGINE')) {
+    $ormCacheEngine = ORM_CACHE_ENGINE;
+}
 
 return [
     'router' => [
@@ -92,4 +98,18 @@ return [
             ],
         ],
     ],
+    'doctrine' => [
+        'driver' => [
+            __NAMESPACE__ . '_driver' => [
+                'class' => AnnotationDriver::class,
+                'cache' => $ormCacheEngine,
+                'paths' => [dirname(__DIR__) . '/src/Entity']
+            ],
+            'orm_default' => [
+                'drivers' => [
+                    __NAMESPACE__ . '\Entity' => __NAMESPACE__ . '_driver'
+                ]
+            ]
+        ]
+    ]
 ];

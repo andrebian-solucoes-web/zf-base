@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^7.0 || ^7.1 || ^7.2",
+        "ext-json": "*",
         "zendframework/zend-component-installer": "^1.0 || ^0.3 || ^1.0.0-dev@dev",
         "zendframework/zend-mvc": "^3.0.1",
         "zendframework/zend-db": "^2.8.1",

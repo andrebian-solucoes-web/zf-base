@@ -2,6 +2,7 @@
 
 namespace User;
 
+use BaseApplication\RequestLog\RequestLogTrait;
 use Doctrine\ORM\EntityManager;
 use User\Assets\SessionNamespace;
 use User\Auth\Adapter;
@@ -25,6 +26,8 @@ use Zend\ServiceManager\ServiceManager;
  */
 class Module implements DependencyIndicatorInterface
 {
+    use RequestLogTrait;
+
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
@@ -99,6 +102,8 @@ class Module implements DependencyIndicatorInterface
             if (strpos($matchedRoute, 'admin-') !== false) {
                 $redirect = 'admin-login';
             }
+
+            $this->registerRequestLog($event);
 
             if (! $auth->hasIdentity() && ! in_array($matchedRoute, $whitelist)) {
                 return $controller->redirect()->toRoute($redirect);
