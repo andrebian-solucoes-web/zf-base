@@ -5,10 +5,11 @@ namespace BaseApplication\Controller;
 use BaseApplication\Repository\AbstractApplicationRepository;
 use BaseApplication\Service\ServiceInterface;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Pagination\Paginator as ORMPaginator;
+use DoctrineORMModule\Paginator\Adapter\DoctrinePaginator as DoctrineAdapter;
 use Exception;
 use Zend\Form\Form;
 use Zend\Http\Request;
-use Zend\Paginator\Adapter\ArrayAdapter;
 use Zend\Paginator\Paginator;
 use Zend\View\Model\ViewModel;
 
@@ -307,9 +308,10 @@ abstract class CrudController extends BaseController
         $entityManager = $this->getServiceManager()->get(EntityManager::class);
         $this->criteria['active'] = $active;
 
-        $collection = $entityManager->getRepository($this->repository)->findBy($this->criteria, $this->orderBy);
+        $query = $entityManager->getRepository($this->repository)->findBy($this->criteria, $this->orderBy);
 
-        $paginator = new Paginator(new ArrayAdapter($collection));
+        $adapter = new DoctrineAdapter(new ORMPaginator($query, false));
+        $paginator = new Paginator($adapter);
         $paginator->setCurrentPageNumber($this->params()->fromRoute('page'));
         $paginator->setDefaultItemCountPerPage(30);
         $paginator->setView();

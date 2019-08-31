@@ -81,4 +81,35 @@ abstract class AbstractApplicationRepository extends EntityRepository implements
 
         return $count;
     }
+
+    public function findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+    {
+        $entityManager = $this->getEntityManager();
+
+        $queryBuilder = $entityManager->createQueryBuilder();
+
+        $queryBuilder->select('p')
+            ->from($this->_entityName, 'p');
+
+        if ($criteria) {
+            $whereAdded = false;
+            foreach ($criteria as $key => $value) {
+                $method = 'where';
+                if ($whereAdded) {
+                    $method = 'andWhere';
+                }
+                $queryBuilder->{$method}('p.' . $key . ' = :_' . $key);
+                $queryBuilder->setParameter('_' . $key, $value);
+                $whereAdded = true;
+            }
+        }
+
+        if ($orderBy) {
+            foreach ($orderBy as $key => $order) {
+                $queryBuilder->addOrderBy('p.' . $key, $order);
+            }
+        }
+
+        return $queryBuilder->getQuery();
+    }
 }

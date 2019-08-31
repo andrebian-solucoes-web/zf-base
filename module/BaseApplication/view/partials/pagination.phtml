@@ -29,7 +29,10 @@ if (! empty($queryString)) {
                 <!-- First page link -->
                 <?php if (isset($this->previous)) : ?>
                     <li>
-                        <?php $params = ['page' => $this->first]; ?>
+                        <?php $params = [
+                            'action' => isset($this->action) ? $this->action : 'index',
+                            'page' => $this->first
+                        ]; ?>
                         <a href="<?php echo $this->url($this->route, $params); ?><?php echo $queryString; ?>"
                            title="Primeira página">
                             Primeira página
@@ -45,7 +48,10 @@ if (! empty($queryString)) {
                 <!-- Previous page link -->
                 <?php if (isset($this->previous)) : ?>
                     <li>
-                        <?php $params = ['page' => $this->previous]; ?>
+                        <?php $params = [
+                            'action' => isset($this->action) ? $this->action : 'index',
+                            'page' => $this->previous
+                        ]; ?>
                         <a href="<?php echo $this->url($this->route, $params); ?><?php echo $queryString; ?>">
                             <i class="fa fa-chevron-left"></i>
                         </a>
@@ -58,8 +64,11 @@ if (! empty($queryString)) {
                 <?php foreach ($this->pagesInRange as $page) : ?>
                     <?php if ($page != $this->current) : ?>
                         <li>
-                            <?php $pagesParams = ['page' => $page]; ?>
-                            <a href="<?php echo $this->url($this->route, $pagesParams); ?><?php echo $queryString; ?>">
+                            <?php $pageNumberParams = [
+                                'action' => isset($this->action) ? $this->action : 'index',
+                                'page' => $page
+                            ]; ?>
+                            <a href="<?php echo $this->url($this->route, $pageNumberParams); ?><?php echo $queryString; ?>">
                                 <?php echo $page; ?>
                             </a>
                         </li>
@@ -71,8 +80,10 @@ if (! empty($queryString)) {
                 <!-- Next page link -->
                 <?php if (isset($this->next)) : ?>
                     <li>
-                        <?php
-                        $nextParams = ['page' => $this->next];
+                        <?php $nextParams = [
+                            'action' => isset($this->action) ? $this->action : 'index',
+                            'page' => $this->next
+                        ];
                         if (! empty($id)) {
                             $nextParams['id'] = $id;
                         }
@@ -85,12 +96,15 @@ if (! empty($queryString)) {
                     <li class="disabled"><a href="#"><i class="fa fa-chevron-right"></i></a></li>
                 <?php endif; ?>
 
-            <?php endif; ?>
+                <?php endif; ?>
 
                 <!-- Last page link -->
                 <?php if (isset($this->next)) : ?>
                     <li>
-                        <?php $lastParams = ['page' => $this->last]; ?>
+                        <?php $lastParams = [
+                            'action' => isset($this->action) ? $this->action : 'index',
+                            'page' => $this->last
+                        ]; ?>
                         <a href="<?php echo $this->url($this->route, $lastParams); ?><?php echo $queryString; ?>"
                            title="Última página">
                             Última página
