@@ -8,15 +8,22 @@ use BaseApplication\View\Helper\BrazilianStateHelperComboViewHelper;
 use BaseApplication\View\Helper\CPFMaskViewHelper;
 use BaseApplication\View\Helper\CpfViewHelper;
 use BaseApplication\View\Helper\JsonDecodeViewHelper;
+use BaseApplication\View\Helper\NextNetworkDayViewHelper;
 use BaseApplication\View\Helper\PhpVersionViewHelper;
 use BaseApplication\View\Helper\ProductionEnvViewHelper;
 use BaseApplication\View\Helper\RefererViewHelper;
 use BaseApplication\View\Helper\S3ViewHelper;
 use BaseApplication\View\Helper\SlugifyViewHelper;
 use Exception;
+use Traversable;
 use Zend\Cache\StorageFactory;
 use Zend\Mail\Transport\Sendmail;
-use Zend\ModuleManager\ModuleManager;
+use Zend\ModuleManager\Feature\ConfigProviderInterface;
+use Zend\ModuleManager\Feature\InitProviderInterface;
+use Zend\ModuleManager\Feature\ServiceProviderInterface;
+use Zend\ModuleManager\Feature\ViewHelperProviderInterface;
+use Zend\ModuleManager\ModuleManagerInterface;
+use Zend\ServiceManager\Config;
 use Zend\ServiceManager\ServiceManager;
 use Zend\View\Renderer\PhpRenderer;
 
@@ -25,13 +32,28 @@ use Zend\View\Renderer\PhpRenderer;
  * @package BaseApplication
  * @codeCoverageIgnore
  */
-class Module
+class Module implements
+    ViewHelperProviderInterface,
+    InitProviderInterface,
+    ServiceProviderInterface,
+    ConfigProviderInterface
 {
+    /**
+     * Returns configuration to merge with application configuration
+     *
+     * @return array|Traversable
+     */
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
     }
 
+    /**
+     * Expected to return \Zend\ServiceManager\Config object or array to
+     * seed such an object.
+     *
+     * @return array|Config
+     */
     public function getServiceConfig()
     {
         return [
@@ -68,31 +90,13 @@ class Module
         ];
     }
 
-    public function getViewHelperConfig()
-    {
-        return [
-            'invokables' => [
-                'zapLoading' => View\Helper\ZapLoadingViewHelper::class,
-                'jsonDecode' => JsonDecodeViewHelper::class,
-                'slugify' => SlugifyViewHelper::class,
-                'brazilianStateCombo' => BrazilianStateHelperComboViewHelper::class,
-                'user' => AuthUserViewHelper::class,
-                'authUser' => AuthUserViewHelper::class,
-                'isProductionEnv' => ProductionEnvViewHelper::class,
-                'isProd' => ProductionEnvViewHelper::class,
-                'phpversion' => PhpVersionViewHelper::class,
-                'cpfMask' => CPFMaskViewHelper::class,
-                'cpf' => CpfViewHelper::class,
-                's3Url' => S3ViewHelper::class,
-                'referer' => RefererViewHelper::class
-            ]
-        ];
-    }
-
     /**
-     * @param ModuleManager $moduleManager
+     * Initialize workflow
+     *
+     * @param ModuleManagerInterface $moduleManager
+     * @return void
      */
-    public function init(ModuleManager $moduleManager)
+    public function init(ModuleManagerInterface $moduleManager)
     {
         // Uncomment this if you need that all actions for this module were authenticated
 //        $sharedEvents = $moduleManager->getEventManager()->getSharedManager();
@@ -123,5 +127,37 @@ class Module
 ////            }
 //
 //        }, 100);
+    }
+
+    /**
+     * Expected to return \Zend\ServiceManager\Config object or array to
+     * seed such an object.
+     *
+     * @return array|Config
+     */
+    public function getViewHelperConfig()
+    {
+        return [
+            'invokables' => [
+                'zapLoading' => View\Helper\ZapLoadingViewHelper::class,
+                'jsonDecode' => JsonDecodeViewHelper::class,
+                'slugify' => SlugifyViewHelper::class,
+                'brazilianStateCombo' => BrazilianStateHelperComboViewHelper::class,
+                'user' => AuthUserViewHelper::class,
+                'authUser' => AuthUserViewHelper::class,
+                'isProductionEnv' => ProductionEnvViewHelper::class,
+                'isProd' => ProductionEnvViewHelper::class,
+                'phpversion' => PhpVersionViewHelper::class,
+                'cpfMask' => CPFMaskViewHelper::class,
+                'cpf' => CpfViewHelper::class,
+                's3Url' => S3ViewHelper::class,
+                'referer' => RefererViewHelper::class,
+                NextNetworkDayViewHelper::class => NextNetworkDayViewHelper::class
+            ],
+            'aliases' => [
+                'proximoDiaUtil' => NextNetworkDayViewHelper::class,
+                'nextNetworkDay' => NextNetworkDayViewHelper::class
+            ]
+        ];
     }
 }
