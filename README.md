@@ -1,5 +1,8 @@
 # ZF Base
 
+> Deprecated: I suggest you to use https://github.com/andrebian/laminas-base instead.
+
+
 A Zend Framework Bootstrap Application for multipurpose applications.
 
 ## 1 - Installing
